@@ -157,4 +157,45 @@ net.createServer(function(socket){
 ![客户端串口输出的信息截图](https://leanote.com/api/file/getImage?fileId=58cb384aab64417ac3007b01)
 
 
-@治电小白菜 20170317
+>服务端慢慢完善中，一步一步记录学习
+2017.3.17
+
+#四Nodejs TCP 服务端和客户端
+>用客户端模拟STM32发送过来的字符串。主要是为了解决对字符串的处理。
+
+##1.客户端代码
+```
+const net = require('net')
+const client = net.connect({port:4001},() => {//向服务端发送
+    console.log("connected to server!");
+    client.write("{\"tem\":\"20\",\"hum\":\"80\"}");
+});
+client.on('data',(data) => {//从服务端接受
+    console.log(data.toString());
+    client.end();
+});
+client.on('end',() => {//断开连接
+    console.log('disconnected from server');
+})
+```
+发送的字符串是json格式：`"{"tem":"20","hum":"80"}"`
+
+##3.服务端代码
+```
+var net = require('net')
+
+net.createServer(function(socket){
+    socket.on('data',function(data){//接受服务端数据
+        console.log('got:',data.toString());
+        var text = JSON.parse(data.toString());//将接收到的字符串转换成json对象
+        console.log(text);//获取json对象
+        console.log(text.tem);//获取tem的值
+    });
+    socket.on('end',function(data){
+        console.log('end');
+    });
+    socket.write('Ready to receive your message!')
+     
+}).listen(4001);
+
+```
