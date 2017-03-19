@@ -160,7 +160,7 @@ net.createServer(function(socket){
 >服务端慢慢完善中，一步一步记录学习
 2017.3.17
 
-#四Nodejs TCP 服务端和客户端
+#四、Nodejs TCP 服务端和客户端
 >用客户端模拟STM32发送过来的字符串。主要是为了解决对字符串的处理。
 
 ##1.客户端代码
@@ -199,3 +199,64 @@ net.createServer(function(socket){
 }).listen(4001);
 
 ```
+
+>缓慢完善中，一步一步记录学习
+2017.3.19
+
+#五、Nodejs连接数据库，进行增删改查
+>目前用来解决，获取STM32发来的数据，将其保存到MYSQL中，方便后面实时显示和统计。
+
+##1.安装node的mysql模块
+>文档：https://www.npmjs.com/package/mysql
+
+`npm install mysql --save`
+
+##2.数据库和表的创建
+```
+DROP TABLE IF EXISTS `env`;
+CREATE TABLE `env` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `tem` int(11) DEFAULT NULL,
+  `hum` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+```
+
+##3.node_mysql模块的使用
+```
+var mysql = require('mysql');
+var conn = mysql.createConnection({
+    host:'localhost',
+    user:'root',
+    password:'root',
+    database:'nodemysql',
+    port:3306
+});
+conn.connect();
+
+//查询
+conn.query('SELECT * from env',function(err,rows,fields){
+    if (err) throw err;
+});
+
+//增加
+var post = {tem:25,hum:50}
+conn.query('INSERT INTO env SET ?', post ,function(error,result,fields){
+    if(error) throw error;
+});
+
+//更改
+conn.query('UPDATE env SET tem=? , hum=? WHERE id = ?',[12,66,1], function(error,result,fields){
+    if(error) throw error;
+});
+
+//删除
+conn.query('DELETE FROM env WHERE tem=?',[12],function(error,result,fields){
+    if (error) throw error;
+    console.log('delete  '+ result.affectedRows + '  rows');
+})
+conn.end();
+```
+
+##4.结果截图
+![](https://leanote.com/api/file/getImage?fileId=58ce98faab64413217001e4d)
