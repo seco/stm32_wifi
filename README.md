@@ -15,6 +15,7 @@
 #一、单片机相关代码(只提供网络相关代码)
 ##1.esp8266相关配置代码
 ###1）esp8266.h(宏定义一些AT指令)
+
 ```
 #define AT          "AT\r\n"	//测试esp8266是否工作正常
 #define CWMODE      "AT+CWMODE=3\r\n"		//设置wifi模块的模式，3为STA+AP模式
@@ -33,6 +34,7 @@ extern void ESP8266_Init(void);
 ```
 
 ###2）esp8266.c(两个配置函数)
+
 ```
 /**
   * @brief  ESP8266硬件复位
@@ -111,6 +113,7 @@ void SendCmd(char* cmd, char* result, int timeOut)
 ```
 
 ###2）拼接代码（拼接成json格式）
+
 ```
 /**
   * @brief   拼接
@@ -137,7 +140,9 @@ uint32_t HTTP_NewPostPacket(char *pkt, char *dsid1, char *val1, char *dsid2, cha
 ```
 
 #二、Node.js相关代码
+
 ##1.TCP服务端代码
+
 ```
 var net = require('net')
 net.createServer(function(socket){
@@ -150,7 +155,9 @@ net.createServer(function(socket){
 ```
 
 #三、结果截图
+
 ##1.服务端打印的信息截图
+
 ![服务端打印的信息截图](https://leanote.com/api/file/getImage?fileId=58cb384aab64417ac3007b02)
 
 ##2.客户端串口输出的信息截图
@@ -163,7 +170,9 @@ net.createServer(function(socket){
 #四、Nodejs TCP 服务端和客户端
 >用客户端模拟STM32发送过来的字符串。主要是为了解决对字符串的处理。
 
+
 ##1.客户端代码
+
 ```
 const net = require('net')
 const client = net.connect({port:4001},() => {//向服务端发送
@@ -178,9 +187,11 @@ client.on('end',() => {//断开连接
     console.log('disconnected from server');
 })
 ```
+
 发送的字符串是json格式：`"{"tem":"20","hum":"80"}"`
 
 ##3.服务端代码
+
 ```
 var net = require('net')
 
@@ -200,6 +211,7 @@ net.createServer(function(socket){
 
 ```
 
+
 >缓慢完善中，一步一步记录学习
 2017.3.19
 
@@ -212,6 +224,7 @@ net.createServer(function(socket){
 `npm install mysql --save`
 
 ##2.数据库和表的创建
+
 ```
 DROP TABLE IF EXISTS `env`;
 CREATE TABLE `env` (
@@ -223,6 +236,7 @@ CREATE TABLE `env` (
 ```
 
 ##3.node_mysql模块的使用
+
 ```
 var mysql = require('mysql');
 var conn = mysql.createConnection({
@@ -259,4 +273,5 @@ conn.end();
 ```
 
 ##4.结果截图
+
 ![](https://leanote.com/api/file/getImage?fileId=58ce98faab64413217001e4d)
