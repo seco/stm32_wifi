@@ -270,9 +270,9 @@ conn.end();
 >缓慢完善中，今天任务很简单，将服务端接收到的数据存入mysql，就是前面的（二）和（三）融合
 2017.3.20
 
-## 六、TCP服务端接收数据并存入Mysql
+# 六、TCP服务端接收数据并存入Mysql
 
-### 1.服务端代码
+## 1.服务端代码
 ```
 var net = require('net')
 var mysql = require('mysql');
@@ -303,7 +303,7 @@ net.createServer(function(socket){
 }).listen(4001);
 ```
 
-##2.结果截图
+## 2.结果截图
 1）客户端截图
 ![客户端](https://leanote.com/api/file/getImage?fileId=58cf824cab6441359b003026)
 
@@ -312,3 +312,16 @@ net.createServer(function(socket){
 
 3）数据库截图
 ![](https://leanote.com/api/file/getImage?fileId=58cf824cab6441359b003027)
+
+
+
+## 3.内网穿透工具ngrok
+1）下载地址：https://ngrok.com/download
+![](leanote://file/getImage?fileId=58cf843191ab7a40a1000006)
+
+2）在ngrok官网注册账号获得自己的authtoken
+![](leanote://file/getImage?fileId=58cf848291ab7a40a1000007)
+
+3）将下载的压缩包解压，进入文件夹，打开命令行，运行`ngrok.exe authtoken 你的authtoken`回车即可
+
+4）运行`ngrok http 80` 将内网80端口映射出去。
