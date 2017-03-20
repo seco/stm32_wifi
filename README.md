@@ -325,3 +325,15 @@ net.createServer(function(socket){
 3）将下载的压缩包解压，进入文件夹，打开命令行，运行`ngrok.exe authtoken 你的authtoken`回车即可
 
 4）运行`ngrok http 80` 将内网80端口映射出去。
+![](https://leanote.com/api/file/getImage?fileId=58cfdd06ab6441321700384d)
+
+
+>通过单片机发送温湿度到服务端，服务端将数据处理后存入mysql数据库
+2017.3.20
+
+# 七、融合结果图
+## 1.命令行
+![QQ截图20170320222648.png](http://upload-images.jianshu.io/upload_images/2245742-3480e4f4826925c9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+## 2.数据库
+![QQ截图20170320222703.png](http://upload-images.jianshu.io/upload_images/2245742-d1049e57ad39951f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
