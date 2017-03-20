@@ -265,3 +265,50 @@ conn.end();
 ## 4.结果截图
 
 ![](https://leanote.com/api/file/getImage?fileId=58ce98faab64413217001e4d)
+
+
+>缓慢完善中，今天任务很简单，将服务端接收到的数据存入mysql，就是前面的（二）和（三）融合
+2017.3.20
+
+## 六、TCP服务端接收数据并存入Mysql
+
+### 1.服务端代码
+```
+var net = require('net')
+var mysql = require('mysql');
+var conn = mysql.createConnection({
+    host:'localhost',
+    user:'root',
+    password:'root',
+    database:'nodemysql',
+    port:3306
+});
+conn.connect();
+net.createServer(function(socket){
+    socket.on('data',function(data){
+        console.log('got:',data.toString());
+        var text = JSON.parse(data.toString());
+        console.log(text);
+        console.log(text.tem);
+        console.log(text.hum);
+        //将温湿度数据存入mysql
+        conn.query('INSERT INTO env SET ?', text, function(error,result,fields){
+            if (error) throw error;
+        });
+    });
+    socket.on('end',function(data){
+        console.log('end');
+    });
+    socket.write('Ready to receive your message!')
+}).listen(4001);
+```
+
+##2.结果截图
+1）客户端截图
+![客户端](https://leanote.com/api/file/getImage?fileId=58cf824cab6441359b003026)
+
+2）服务端截图
+![](https://leanote.com/api/file/getImage?fileId=58cf824cab6441359b003028)
+
+3）数据库截图
+![](https://leanote.com/api/file/getImage?fileId=58cf824cab6441359b003027)
