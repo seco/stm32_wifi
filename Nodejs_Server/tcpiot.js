@@ -17,7 +17,7 @@ net.createServer(function(socket){
 		var text = JSON.parse(data.toString());
 		console.log(text);
 		console.log(text.tem)
-
+		console.log(text.hum)
 		conn.query('INSERT INTO env SET ?', text, function(error,result,fields){
 			if (error) throw error;
 		});
