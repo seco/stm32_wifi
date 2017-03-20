@@ -47,7 +47,7 @@
 uint32_t HTTP_NewPostPacket(char *pkt, char *dsid1, char *val1, char *dsid2, char *val2);
 int main(void)
 {
-    uint16_t temp, humi;    //温湿度
+    uint16_t tem, hum;    //温湿度
     char HTTP_Buf[100];     //HTTP报文缓存区
     char tempStr[5];       //字符串格式温度
     char humiStr[5];       //字符串格式湿度
@@ -64,13 +64,13 @@ int main(void)
     while(1)
     {
         /* 获取温湿度 */
-        SHT2x_MeasureHM(SHT20_Measurement_T_HM, &temp);
+        SHT2x_MeasureHM(SHT20_Measurement_T_HM, &tem);
         mDelay(500);
-        SHT2x_MeasureHM(SHT20_Measurement_RH_HM, &humi);
+        SHT2x_MeasureHM(SHT20_Measurement_RH_HM, &hum);
 
         /* 转化为字符串形式 */
-        sprintf(tempStr, "%d", temp);
-        sprintf(humiStr, "%d", humi);
+        sprintf(tempStr, "%d", tem);
+        sprintf(humiStr, "%d", hum);
 
         //printf("%s   %s\r\n", tempStr, humiStr);
 
@@ -92,7 +92,7 @@ int main(void)
 
 
         USART2_Clear();
-        len = HTTP_NewPostPacket(HTTP_Buf,  "temp", tempStr, "humi", humiStr); //HTTP组包
+        len = HTTP_NewPostPacket(HTTP_Buf,  "tem", tempStr, "hum", humiStr); //HTTP组包
         USART2_Write(USART2, (unsigned char *)(HTTP_Buf), len);			//报文发送
         printf("send HTTP msg:\r\n%s\r\n", HTTP_Buf);
 
