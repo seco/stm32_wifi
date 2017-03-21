@@ -10,10 +10,30 @@
 		}
 	</style>
 	<script src="../echarts.js"></script>
+
 </head>
 <body>
 	<div id="main"></div>
 	<script>
+ 		
+		var text ;
+		var xhr = new XMLHttpRequest();
+		xhr.withCredentials = true;
+
+		xhr.addEventListener("readystatechange", function () {
+		  if (this.readyState === 4) {
+		    console.log(this.responseText);
+		    text = this.responseText;
+		  }
+		});
+
+		xhr.open("GET", "http://127.0.0.1:3000/mysql");
+		xhr.setRequestHeader("cache-control", "no-cache");
+ 		xhr.setRequestHeader("cache-control", "no-cache");
+
+ 		console.log(text);
+
+
 		//初始化echarts
 		var myChart = echarts.init(document.getElementById('main'));
 
@@ -33,7 +53,7 @@
 			series:[{
 				name:'价格环比指数',
 				type:'line',
-				data:[90,140,102,90,80]
+				data:
 			},{
 				name:'价格环比指数',
 				type:'bar',
