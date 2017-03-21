@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>task1</title>
+	<style>
+		#main{
+			width: 600px;
+			height: 400px;
+		}
+	</style>
+	<script src="../echarts.js"></script>
+</head>
+<body>
+	<div id="main"></div>
+	<script>
+		//初始化echarts
+		var myChart = echarts.init(document.getElementById('main'));
+
+		//指定图表的配置项和数据
+		var option ={
+			title:{
+				text:'纯属虚构'
+			},
+			tooltip:{},//提示框
+			legend:{//图例组件
+				data:['商品住宅价格变动']
+			},
+			xAxis:{
+				data:["北京","天津","上海","南京","无锡"]
+			},
+			yAxis:{},
+			series:[{
+				name:'价格环比指数',
+				type:'line',
+				data:[90,140,102,90,80]
+			},{
+				name:'价格环比指数',
+				type:'bar',
+				data:[90,140,102,90,80]
+			}]
+		};
+
+		//使用设置的配置项和数据显示图表
+		myChart.setOption(option);
+	</script>
+</body>
+
+</html>
