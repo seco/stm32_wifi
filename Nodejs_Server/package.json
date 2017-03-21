@@ -4,6 +4,8 @@
   "description": "",
   "main": "mysqltest.js",
   "dependencies": {
+    "echarts": "^3.4.0",
+    "express": "^4.15.2",
     "mysql": "^2.13.0"
   },
   "devDependencies": {},

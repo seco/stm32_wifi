@@ -13,6 +13,7 @@
  - net模块
 
 
+
 # 一、单片机相关代码(只提供网络相关代码)
 
 ## 1.esp8266相关配置代码
@@ -337,3 +338,142 @@ net.createServer(function(socket){
 
 ## 2.数据库
 ![QQ截图20170320222703.png](http://upload-images.jianshu.io/upload_images/2245742-d1049e57ad39951f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+>昨天完成了将STM32采集到的温湿度数据传到服务端，存入Mysql数据库的操作。今天做的是通过express连接数据库，提供接口，让前端页面通过fetch获取数据。其中遇到了跨域问题，在express中解决了。
+代码地址：https://github.com/klren0312/stm32_wifi
+2017.3.21
+
+
+# 八、Express服务端与前端获取
+
+## 1.Express服务端代码
+1)连接数据库（前面已经有介绍了）
+```
+var mysql = require('mysql');
+//数据库配置
+var conn = mysql.createConnection({
+    host:'localhost',
+    user:'root',
+    password:'root',
+    database:'nodemysql',
+    port:3306
+});
+//连接数据库
+conn.connect();
+```
+
+2)Express跨域解决
+>解决了前端的`已拦截跨源请求：同源策略禁止读取位于 http://127.0.0.1:3000/mysql 的远程资源。（原因：CORS 头缺少 'Access-Control-Allow-Origin'）。`错误
+
+```
+//设置所有路由无限制访问，不需要跨域
+app.all('*',function(req,res,next){
+    res.header("Access-Control-Allow-Origin","*");
+    res.header("Access-Control-Allow-Headers","X-Requested-With");
+    res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
+    res.header("X-Powered-By",'3.2.1');
+    res.header("Content-Type","application/json;charset=utf-8");
+    next();
+})
+```
+
+3)路由配置（提供接口）
+>两个接口，分别是温度和湿度数据。提供最新的五个数据
+
+```
+//温度
+app.get('/tem',function(req,res){
+    var tem = [];
+    conn.query('SELECT * FROM env',function(err,rows,fields){
+        var i  = rows.length;
+        var i = rows.length;
+        var j =i-1;
+        var c= 0;
+        while(j>=i-5){
+            tem[c] = rows[j].tem;
+            c++;
+            j--;
+        }
+        res.send(JSON.stringify(tem));
+    })
+})
+//湿度
+app.get('/hum',function(req,res) {
+    var hum = [];
+    conn.query('SELECT * FROM env',function(err,rows,fields){
+        var i = rows.length;
+        var j =i-1;
+        var c= 0;
+        while(j>=i-5){
+            hum[c] = rows[j].hum;
+            c++;
+            j--;
+        }
+        res.send(JSON.stringify(hum));
+    })
+     
+});
+```
+
+4)express服务器配置
+>设置端口为3000
+
+```
+//端口：3000
+var server = app.listen(3000,function(){
+    var host = server.address().address;
+    var port = server.address().port;
+
+    console.log(host + "  " + port);
+})
+```
+
+## 2.前端代码
+>使用fetch取代ajax（fetch与XMLHttpRequest(XHR)类似，fetch()方法允许你发出AJAX请求。区别在于Fetch API使用Promise，因此是一种简洁明了的API，比XMLHttpRequest更加简单易用。）
+
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>jsonptest</title>
+</head>
+<body>
+    <script>
+        function status(response){
+            if(response.status>=200 && response.status<300){
+                return Promise.resolve(response);
+            }
+            else{
+                return Promise.reject(new Error(response.statusText));
+            }
+        }
+        function json(response){
+            return response.json();
+        }
+        //设置接口地址
+        fetch("http://127.0.0.1:3000/tem")
+        .then(status)
+        .then(json)
+        .then(function(data){
+            console.log("请求成功，JSON解析后的响应数据为:",data);
+        })
+        .catch(function(err){
+            console.log("Fetch错误:"+err);
+        });
+    </script>
+</body>
+</html>
+```
+
+## 3.结果截图
+1)postman请求温度截图
+  ![tem.png](http://upload-images.jianshu.io/upload_images/2245742-6c28960573cffd58.png?imageMogr2/auto-orient/strip%7CimageView2
+
+2)postman请求湿度截图
+ ![hum.png](http://upload-images.jianshu.io/upload_images/2245742-69628272f0f82952.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+3)前端fetch获取到的温度数据截图
+ 
+![QQ截图20170321205801.png](http://upload-images.jianshu.io/upload_images/2245742-3a51f1e07a336a25.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
