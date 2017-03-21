@@ -13,16 +13,16 @@ var conn = mysql.createConnection({
 //连接数据库
 conn.connect();
 
- //设置所有路由无限制访问，不需要跨域
- app.all('*',function(req,res,next){
+//设置所有路由无限制访问，不需要跨域
+app.all('*',function(req,res,next){
  	res.header("Access-Control-Allow-Origin","*");
  	res.header("Access-Control-Allow-Headers","X-Requested-With");
  	res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS");
  	res.header("X-Powered-By",'3.2.1');
  	res.header("Content-Type","application/json;charset=utf-8");
  	next();
- })
-
+})
+//温度
 app.get('/tem',function(req,res){
 	var tem = [];
 	conn.query('SELECT * FROM env',function(err,rows,fields){
@@ -38,7 +38,7 @@ app.get('/tem',function(req,res){
 		res.send(JSON.stringify(tem));
 	})
 })
-
+//湿度
 app.get('/hum',function(req,res) {
 	var hum = [];
 	conn.query('SELECT * FROM env',function(err,rows,fields){
@@ -54,9 +54,7 @@ app.get('/hum',function(req,res) {
 	})
 	 
 });
-
-
-
+//端口：3000
 var server = app.listen(3000,function(){
 	var host = server.address().address;
 	var port = server.address().port;
