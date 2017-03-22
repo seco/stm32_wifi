@@ -28,12 +28,12 @@ app.get('/tem',function(req,res){
 	conn.query('SELECT * FROM env',function(err,rows,fields){
 		var i  = rows.length;
 		var i = rows.length;
-		var j =i-1;
+		var j =i-5;
 		var c= 0;
-		while(j>=i-5){
+		while(j < i ){
 			tem[c] = rows[j].tem;
 			c++;
-			j--;
+			j++;
 		}
 		res.send(JSON.stringify(tem));
 	})
@@ -43,12 +43,12 @@ app.get('/hum',function(req,res) {
 	var hum = [];
 	conn.query('SELECT * FROM env',function(err,rows,fields){
 		var i = rows.length;
-		var j =i-1;
+		var j =i-5;
 		var c= 0;
-		while(j>=i-5){
+		while(j<i){
 			hum[c] = rows[j].hum;
 			c++;
-			j--;
+			j++;
 		}
 		res.send(JSON.stringify(hum));
 	})
