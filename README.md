@@ -1,4 +1,4 @@
->根据OneNET平台给的代码改的，纯新手，慢慢学。。
+>纯新手，慢慢学。。
 代码地址：https://github.com/klren0312/stm32_wifi
 
 使用的器件：
@@ -12,6 +12,14 @@
  - Node.js
  - net模块
 
+
+[搭建简易的物联网服务端-STM32（一）](http://www.jianshu.com/p/233ce211446f)
+[搭建简易的物联网服务端-Nodejs_net（二）](http://www.jianshu.com/p/289683c96346)
+[搭建简易的物联网服务端-Nodejs_mysql（三）](http://www.jianshu.com/p/3ec5b5ec53a5)
+[搭建简易的物联网服务端-net+mysql（四）](http://www.jianshu.com/p/80eff97e39b6)
+[搭建简易的物联网服务端-第一次融合（五）](http://www.jianshu.com/p/16799e256e0a)
+[搭建简易的物联网服务端-Nodejs_express服务（六）](http://www.jianshu.com/p/462144651ee8)
+[搭建简易的物联网服务端-ECharts数据显示（七）](http://www.jianshu.com/p/855d7fc25d10)
 
 
 # 一、单片机相关代码(只提供网络相关代码)
@@ -477,3 +485,124 @@ var server = app.listen(3000,function(){
 3)前端fetch获取到的温度数据截图
  
 ![QQ截图20170321205801.png](http://upload-images.jianshu.io/upload_images/2245742-3a51f1e07a336a25.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+>继续缓慢学习。昨天前端获取到了数据，今天我们来通过ECharts来显示数据。
+代码地址：https://github.com/klren0312/stm32_wifi
+2017.3.22
+
+
+# 九、ECharts数据显示
+
+## 1.ECharts基本
+1)介绍
+百度推出的一款纯 Javascript 的图表库。
+官方网址：http://echarts.baidu.com/index.html
+<br>
+2)基本使用
+>官方网站有文档，我这里放出最基本结构(我也就会这么多。。。)
+
+
+![基本结构.png](http://upload-images.jianshu.io/upload_images/2245742-d97edfaf190dce29.png)
+
+
+<br>
+
+## 2.EChart异步获取数据显示
+>百度遇到坑，后来发现官方快速入门就有介绍。。。
+
+![官方异步说明.png](http://upload-images.jianshu.io/upload_images/2245742-524f616e88a8f54f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+1)建立图表代码(body里面要建个id为main的div，记得设置长宽)
+两个折线图放在一起，分别显示温度和湿度。
+```
+//初始化echarts
+var myChart = echarts.init(document.getElementById('main'));
+//指定图表的配置项和数据
+var option ={
+    title:{
+        text:'温湿度'
+    },
+    tooltip:{},//提示框
+    legend:{//图例组件
+        data:['温度','湿度']
+    },
+    xAxis:{
+        data:["1","2","3","4","最新"]
+    },
+    yAxis:{},
+    series: [{
+        name: '温度',
+        type: 'line',
+        data: []
+    },{
+        name:"湿度",
+        type:'line',
+        data:[]
+    }]
+};
+//使用设置的配置项和数据显示图表
+myChart.setOption(option);
+```
+
+3)fetch获取数据并加载到图表中
+```
+//fetch相关函数
+function status(response){
+    if(response.status>=200 && response.status<300){
+        return Promise.resolve(response);
+    }
+    else{
+        return Promise.reject(new Error(response.statusText));
+    }
+}
+function json(response){
+    return response.json();
+}
+获取温度数据
+fetch("http://127.0.0.1:3000/tem")
+    .then(status)
+    .then(json)
+    .then(function(data){
+        //将数据加载到对应series name的表中
+        myChart.setOption({
+            series: [{
+                // 根据名字对应到相应的系列
+                name: '温度',
+                data: data
+            }]
+        });
+    })
+    .catch(function(err){
+        console.log("Fetch错误:"+err);
+    });
+//获取湿度数据
+fetch("http://127.0.0.1:3000/hum")
+    .then(status)
+    .then(json)
+    .then(function(data){
+        //将数据加载到对应series name的表中
+        myChart.setOption({
+             series: [{
+                 // 根据名字对应到相应的系列
+                 name: '湿度',
+                 data: data
+             }]
+        });
+    })
+    .catch(function(err){
+        console.log("Fetch错误:"+err);
+    });
+```
+
+## 3.结果截图
+
+1)温湿度折线图截图
+
+![温湿度图表.png](http://upload-images.jianshu.io/upload_images/2245742-f7a73f6a87d5c2d4.png)
+
+
+2)温湿度柱状图截图
+
+![温湿度柱状图表.png](http://upload-images.jianshu.io/upload_images/2245742-afbfaea92c3ce1a0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
