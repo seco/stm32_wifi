@@ -9,29 +9,60 @@
 			height: 400px;
 		}
 	</style>
-	<script src="../echarts.js"></script>
+	<script src="echarts.js"></script>
 
 </head>
 <body>
 	<div id="main"></div>
+
 	<script>
  		
-		var text ;
-		var xhr = new XMLHttpRequest();
-		xhr.withCredentials = true;
+ 		function status(response){
+ 		    if(response.status>=200 && response.status<300){
+ 		        return Promise.resolve(response);
+ 		    }
+ 		    else{
+ 		        return Promise.reject(new Error(response.statusText));
+ 		    }
+ 		}
+ 		function json(response){
+ 		    return response.json();
+ 		}
+ 		fetch("http://127.0.0.1:3000/tem")
+ 			.then(status)
+ 			.then(json)
+ 			.then(function(data){
+ 		    	// console.log("请求成功，JSON解析后的响应数据为:",data);
+ 		    	
+ 		    	myChart.setOption({
+ 		    	       
+ 		    	       series: [{
+ 		    	           // 根据名字对应到相应的系列
+ 		    	           name: '温度',
+ 		    	           data: data
+ 		    	       }]
+ 		    	   });
+ 			})
+ 			.catch(function(err){
+ 		    	console.log("Fetch错误:"+err);
+ 			});
 
-		xhr.addEventListener("readystatechange", function () {
-		  if (this.readyState === 4) {
-		    console.log(this.responseText);
-		    text = this.responseText;
-		  }
-		});
-
-		xhr.open("GET", "http://127.0.0.1:3000/mysql");
-		xhr.setRequestHeader("cache-control", "no-cache");
- 		xhr.setRequestHeader("cache-control", "no-cache");
-
- 		console.log(text);
+ 			fetch("http://127.0.0.1:3000/hum")
+ 				.then(status)
+ 				.then(json)
+ 				.then(function(data){
+ 			    	// console.log("请求成功，JSON解析后的响应数据为:",data);
+ 			    	myChart.setOption({
+ 			    	       series: [{
+ 			    	           // 根据名字对应到相应的系列
+ 			    	           name: '湿度',
+ 			    	           data: data
+ 			    	       }]
+ 			    	   });
+ 				})
+ 				.catch(function(err){
+ 			    	console.log("Fetch错误:"+err);
+ 				});
 
 
 		//初始化echarts
@@ -40,25 +71,25 @@
 		//指定图表的配置项和数据
 		var option ={
 			title:{
-				text:'纯属虚构'
+				text:'温湿度'
 			},
 			tooltip:{},//提示框
 			legend:{//图例组件
-				data:['商品住宅价格变动']
+				data:['温度','湿度']
 			},
 			xAxis:{
-				data:["北京","天津","上海","南京","无锡"]
+				data:["1","2","3","4","最新"]
 			},
 			yAxis:{},
-			series:[{
-				name:'价格环比指数',
-				type:'line',
-				data:
-			},{
-				name:'价格环比指数',
-				type:'bar',
-				data:[90,140,102,90,80]
-			}]
+			series: [{
+        		name: '温度',
+       			type: 'line',
+        		data: []
+    		},{
+    			name:"湿度",
+    			type:'line',
+    			data:[]
+    		}]
 		};
 
 		//使用设置的配置项和数据显示图表
