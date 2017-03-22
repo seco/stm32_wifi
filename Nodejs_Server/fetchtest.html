@@ -2,10 +2,30 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
+	<meta http-equiv="Access-Control-Allow-Origin" content="*">
 	<title>jsonptest</title>
 </head>
 <body>
 	<script>
+	// var data = null;
+
+	// var xhr = new XMLHttpRequest();
+	// xhr.withCredentials = true;
+
+	// xhr.addEventListener("readystatechange", function () {
+	//   if (this.readyState === 4) {
+	//     console.log(this.responseText);
+	//   }
+	// });
+
+	// xhr.open("GET", "http://127.0.0.1:3000/tem");
+	// xhr.setRequestHeader("cache-control", "no-cache");
+	// xhr.setRequestHeader("postman-token", "6962145b-67d4-cce0-186d-fad7ef2c3bd2");
+
+	// xhr.send(data);
+
+
+		var text =[];
 		function status(response){
 		    if(response.status>=200 && response.status<300){
 		        return Promise.resolve(response);
@@ -18,14 +38,15 @@
 		    return response.json();
 		}
 		fetch("http://127.0.0.1:3000/tem")
-		.then(status)
-		.then(json)
-		.then(function(data){
-		    console.log("请求成功，JSON解析后的响应数据为:",data);
-		})
-		.catch(function(err){
-		    console.log("Fetch错误:"+err);
-		});
+			.then(status)
+			.then(json)
+			.then(function(data){
+		    	console.log("请求成功，JSON解析后的响应数据为:",data);
+		    	text = data;
+			})
+			.catch(function(err){
+		    	console.log("Fetch错误:"+err);
+			});
 	</script>
 </body>
 </html>
