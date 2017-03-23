@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>test1</title>
+</head>
+<body>
+	<script>
+		//打印三个e
+		//setTimeout 在指的毫秒数后，将定时任务处理的函数添加到执行队列的队尾
+		//setInterval 按照指定的周期（毫秒数计时），将定时任务处理函数添加到执行队列的队尾
+		for(var i=1;i<=3;i++){
+			setTimeout(function() {
+				console.log(i);
+			},100);
+			// setInterval(function(){
+			// 	console.log(i);
+			// },100);
+		}
+	</script>
+</body>
+</html>
