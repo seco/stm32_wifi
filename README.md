@@ -606,3 +606,69 @@ fetch("http://127.0.0.1:3000/hum")
 2)温湿度柱状图截图
 
 ![温湿度柱状图表.png](http://upload-images.jianshu.io/upload_images/2245742-afbfaea92c3ce1a0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+
+>今天主要完成的是表的局部刷新，然后就是整体展示。
+代码地址：https://github.com/klren0312/stm32_wifi
+2017.3.23
+
+
+
+# 十、整合
+
+## 1.EChart的局部刷新
+1）setTimeout 和 setInterval
+setTimeout 在指定的毫秒数后，将定时任务处理的函数添加到执行队列的队尾（只是延迟执行一次）
+setInterval 按照指定的周期（毫秒数计时），将定时任务处理函数添加到执行队列的队尾（周期循环执行）
+
+2）局部刷新
+刚开始是准备进行全部页面进行刷新，来更新数据（原谅我的无知）
+```
+function freshWeb(){
+    window.location.reload();
+}
+setInterval('freshWeb()',3000)
+```
+但是感到体验很差，于是我把fetch数据的相关放到一个函数中，然后用setInterval对fetch数据的函数循环执行，就可以达到ECharts数据更新的操作。
+```
+function getData(){
+    fetch("http://127.0.0.1:3000/tem")
+        .then(status)
+        .then(json)
+        .then(function(data){
+            myChart.setOption({
+                series: [{
+                // 根据名字对应到相应的系列
+                 name: '温度',
+                 data: data
+                }]
+            });
+        })
+        .catch(function(err){
+             console.log("Fetch错误:"+err);
+        });
+}
+//循环执行fetch数据获取，达到ECharts数据更新的操作
+setInterval('getData()',10);
+```
+
+## 2.整合实战结果图片
+1）实时温湿度web显示
+![实时温湿度web显示页面](http://upload-images.jianshu.io/upload_images/2245742-2dd78dbe3cc68072.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+2）服务端数据存储
+
+![服务端](http://upload-images.jianshu.io/upload_images/2245742-b77f9ff90a76ffb3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+3）单片机照片
+
+
+![单片机](http://upload-images.jianshu.io/upload_images/2245742-20c6508919fd9f07.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+
+## 3.感谢大家
+本人初学者，什么都不会，自己慢慢摸索，很多用到的技术和思路可能很繁琐，到后面随着我的学习会慢慢改正。
+
