@@ -7,10 +7,11 @@
  - ESP8266-01S wifi模块
  - SHT20温湿度
 
-使用的服务端：
+使用的Node.js服务端：
 
- - Node.js
  - net模块
+ - express
+ - node-mysql
 
 
 [搭建简易的物联网服务端-STM32（一）](http://www.jianshu.com/p/233ce211446f)
@@ -20,6 +21,7 @@
 [搭建简易的物联网服务端-第一次融合（五）](http://www.jianshu.com/p/16799e256e0a)
 [搭建简易的物联网服务端-Nodejs_express服务（六）](http://www.jianshu.com/p/462144651ee8)
 [搭建简易的物联网服务端-ECharts数据显示（七）](http://www.jianshu.com/p/855d7fc25d10)
+[搭建简易的物联网服务端-整合（八）](http://www.jianshu.com/p/e8ab20c70b5f)
 
 
 # 一、单片机相关代码(只提供网络相关代码)
