@@ -1,0 +1,14 @@
+{
+  "uuid": "fbc6186f337ebcb16b15e108f3965d75",
+  "name": "温湿度监测",
+  "icon": "IMAGE_ICON",
+  "version": "0.0.1",
+  "watchface": "true",
+  "resources": [
+  	  {
+        "type": "bmp",
+        "name": "PIC_BG",
+        "file": "bg.bmp"
+      }
+  ]
+}
