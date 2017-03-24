@@ -203,8 +203,8 @@ void USART2_IRQHandler(void)
         //GPIO_SetBits(GPIOC,GPIO_Pin_0|GPIO_Pin_1|GPIO_Pin_2|GPIO_Pin_3);
         data = USART2->DR;
         usart2_rcv_buf[usart2_rcv_len++] = data;
-		if(usart2_rcv_len >= MAX_RCV_LEN - 1)
-			usart2_rcv_len = 0;
+				if(usart2_rcv_len >= MAX_RCV_LEN - 1)
+						usart2_rcv_len = 0;
         //usart1_rcv_buf[usart1_rcv_len++]=data;
         //usart1_putrxchar(data);       //Insert received character into buffer
     }

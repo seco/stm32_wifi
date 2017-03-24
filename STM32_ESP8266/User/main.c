@@ -34,16 +34,12 @@
 #include "esp8266.h"
 
 
-//#define API_KEY     "3L4OaBc8pb4iuTosCJ33IWZznkg="		//需要定义为用户自己的参数
-//#define DEV_ID      "4093185"							//需要定义为用户自己的参数
-
 /**n
   * @brief      利用I2C接口，采集温湿度传感器的值，使用HTTP协议上传到OneNET
   * @attention  使用UART2连接ESP8266模块，使用透传模式发送和接收数据
   *	            使用UART1作为调试打印串口，使用printf将从该接口打印消息
   *			
   */
-//uint32_t HTTP_PostPkt(char *pkt, char *key, char *devid, char *dsid, char *val);
 uint32_t HTTP_NewPostPacket(char *pkt, char *dsid1, char *val1, char *dsid2, char *val2);
 int main(void)
 {
@@ -71,25 +67,6 @@ int main(void)
         /* 转化为字符串形式 */
         sprintf(tempStr, "%d", tem);
         sprintf(humiStr, "%d", hum);
-
-        //printf("%s   %s\r\n", tempStr, humiStr);
-
-//        USART2_Clear();
-//        len = HTTP_PostPkt(HTTP_Buf, API_KEY, DEV_ID, "temp", tempStr); //HTTP组包
-//        USART2_Write(USART2, (unsigned char *)(HTTP_Buf), len);			//报文发送
-//        printf("send HTTP msg:\r\n%s\r\n", HTTP_Buf);
-
-//        mDelay(1000);
-//        printf("rcv response:\r\n%s\r\n", usart2_rcv_buf);
-
-//        USART2_Clear();
-//        len = HTTP_PostPkt(HTTP_Buf, API_KEY, DEV_ID, "humi", humiStr); //HTTP组包
-//        USART2_Write(USART2, (unsigned char *)(HTTP_Buf), len);			//报文发送
-//        printf("send HTTP msg:\r\n%s\r\n", HTTP_Buf);
-
-//        mDelay(1000);
-//        printf("rcv response:\r\n%s\r\n", usart2_rcv_buf);
-
 
         USART2_Clear();
         len = HTTP_NewPostPacket(HTTP_Buf,  "tem", tempStr, "hum", humiStr); //HTTP组包
