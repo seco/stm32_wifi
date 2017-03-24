@@ -22,6 +22,7 @@
 [搭建简易的物联网服务端-Nodejs_express服务（六）](http://www.jianshu.com/p/462144651ee8)
 [搭建简易的物联网服务端-ECharts数据显示（七）](http://www.jianshu.com/p/855d7fc25d10)
 [搭建简易的物联网服务端-整合（八）](http://www.jianshu.com/p/e8ab20c70b5f)
+[搭建简易的物联网服务端-Maibu显示（九）](http://www.jianshu.com/p/54af2d858908)
 
 
 # 一、单片机相关代码(只提供网络相关代码)
