@@ -674,3 +674,114 @@ setInterval('getData()',10);
 ## 3.感谢大家
 本人初学者，什么都不会，自己慢慢摸索，很多用到的技术和思路可能很繁琐，到后面随着我的学习会慢慢改正。
 
+
+>刚好手边有块Maibu手表，所以，今天我们来让Maibu也来获取显示单片机的温湿度。
+代码地址：https://github.com/klren0312/stm32_wifi
+2017.3.24
+
+# 十一、Maibu显示
+
+## 1.服务端提供接口
+>提供“/watch”接口
+
+```
+//手表推送
+app.get('/watch',function(req,res){
+    var tem = [];
+    conn.query('SELECT * FROM env',function(err,rows,fields){
+        var tem = "{ \"temhum\" :" + "\"" + rows[rows.length-1].tem + "  |  " 
+        + rows[rows.length-1].hum +  "\""  + "}";
+        res.send(tem);
+    })
+})
+```
+
+## 2.Maibu手表
+1）官方网站
+http://www.maibu.cc/
+
+2）官方开发者中心
+http://dev.maibu.cc/developer/index_login.do
+
+3）开发者文档
+http://maibu.cc/api/welcome.html
+
+## 3.手表代码
+>写的比较乱，这里只放出请求数据的代码。大家可以去我的github上看完整代码
+
+1）数据请求函数
+```
+void data_request_web()
+{
+    /*拼接url请求地址, 注意url的缓存大小*/
+    char url[200] = ""; 
+    sprintf(url, "%s", DATA_WEB);       
+    /*发送一次*/
+    g_comm_id_web = maibu_comm_request_web(url, "temhum", 0);//过滤
+}
+```
+
+2）界面初始化函数
+```
+P_Window init_btc_window()
+{
+    static P_Window p_window;
+    P_Layer layer_background = NULL;   
+    p_window = app_window_create();
+    if (NULL == p_window)
+    {
+        return NULL;
+    }
+    /*加入你的代码 begin*/    
+    /*创建背景图层*/
+    layer_background = get_layer();
+    /*添加背景图层到窗口*/
+    app_window_add_layer(p_window, layer_background);
+    /* 添加时间栏 */
+    add_time_bar(p_window);
+    /*添加数据提示信息*/
+    GRect frame_tem = {{0, 30}, {16, 128}};
+    add_text_layer(p_window, &g_layer_id_tem, "温度", &frame_tem, GAlignLeft, U_ASCII_ARIAL_16, GColorWhite);
+    /*添加数据提示信息*/
+    GRect frame_hum = {{0, 30}, {16, 128}};
+    add_text_layer(p_window, &g_layer_id_hum, "湿度", &frame_hum, GAlignRight, U_ASCII_ARIAL_16, GColorWhite);
+    /*添加数据提示信息*/
+    GRect frame_zzes = {{0,110}, {16, 128}};
+    add_text_layer(p_window, &g_layer_id_zzes, "治电科技", &frame_zzes, GAlignBottom, U_ASCII_ARIAL_16, GColorWhite);
+    /*添加数据*/
+    GRect frame_data = {{0,60}, {16, 128}};
+    add_text_layer(p_window, &g_layer_id_data, "waiting", &frame_data, GAlignCenter , U_ASCII_ARIAL_42, GColorWhite);
+    return p_window;
+}
+```
+
+3）更新数据函数
+```
+static void web_recv_callback(const uint8_t *buff, uint16_t size)
+{
+    char stock_gid[10];
+    char i;
+    maibu_get_json_str(buff, "temhum", stock_gid, 10);//过滤
+    for (i=0;i<10;i++)
+    {
+    if (stock_gid[i]=='}')
+        {
+            stock_gid[i]=0;
+        }
+    }
+    /*添加数据*/
+    GRect frame_data = {{0,60}, {25, 128}};
+    add_text_layer(h_window, &g_layer_id_data, stock_gid, &frame_data, GAlignCenter , U_ASCII_ARIAL_20, GColorWhite);
+    
+    app_window_update(h_window);
+}
+```
+
+## 4.结果展示
+1）模拟器
+![模拟器](http://upload-images.jianshu.io/upload_images/2245742-6b98ce11645b05e1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+2）手表表盘
+
+![maibu手表显示](http://upload-images.jianshu.io/upload_images/2245742-aca208371be9a8bb.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
