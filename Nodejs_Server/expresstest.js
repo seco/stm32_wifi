@@ -54,6 +54,15 @@ app.get('/hum',function(req,res) {
 	})
 	 
 });
+//手表推送
+app.get('/watch',function(req,res){
+	var tem = [];
+	conn.query('SELECT * FROM env',function(err,rows,fields){
+		var tem = "{ \"temhum\" :" + "\"" + rows[rows.length-1].tem + "  |  " 
+		+ rows[rows.length-1].hum +  "\""  + "}";
+		res.send(tem);
+	})
+})
 //端口：3000
 var server = app.listen(3000,function(){
 	var host = server.address().address;
