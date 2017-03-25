@@ -25,13 +25,13 @@ static uint32_t g_comm_id_web = 0;
 #define TIME_TEXT_SIZE_H                     14
 
 
-/*图片坐标：第一项为背景图片，后面依次为时间的1~4位*/
+/*背景图片xy坐标，以及长宽*/
 static uint8_t ORIGIN_X = 0;
 static uint8_t ORIGIN_Y = 0;
 static uint8_t ORIGIN_H = 128;
 static uint8_t ORIGIN_W = 128;
 
-
+//星期数组
 static const char weekday[7][11] =
 {
     {"周日"},
@@ -79,6 +79,7 @@ void data_request_web()
     g_comm_id_web = maibu_comm_request_web(url, "temhum", 0);//过滤
 }
 
+//添加布局的函数
 void add_text_layer(P_Window p_window, int32_t *p_layer_id, char *p_str, GRect *p_frame, enum GAlign align, int8_t font, enum GColor color)
 {
     LayerText text_cfg = {p_str, *p_frame, align, font, 0};
@@ -101,7 +102,7 @@ void add_text_layer(P_Window p_window, int32_t *p_layer_id, char *p_str, GRect *
  *     function:  get_layer
  *    parameter: 
  *       return:
- *  description:  生成表盘窗口的各图层
+ *  description:  生成背景图层
  *        other:
  *--------------------------------------------------------------------------------------
  */
@@ -153,6 +154,7 @@ static void add_time_bar(P_Window p_window)
     add_text_layer(p_window, &g_layer_id_time, (char*)text_buf, &frame, GAlignLeft, U_ASCII_ARIAL_14, GColorWhite);
 }
 
+//初始化显示
 P_Window init_btc_window()
 {
 
@@ -176,19 +178,19 @@ P_Window init_btc_window()
     /* 添加时间栏 */
     add_time_bar(p_window);
 
-    /*添加数据提示信息*/
+    /*温度提示*/
     GRect frame_tem = {{0, 30}, {16, 128}};
     add_text_layer(p_window, &g_layer_id_tem, "温度", &frame_tem, GAlignLeft, U_ASCII_ARIAL_16, GColorWhite);
 
-    /*添加数据提示信息*/
+    /*湿度提示*/
     GRect frame_hum = {{0, 30}, {16, 128}};
     add_text_layer(p_window, &g_layer_id_hum, "湿度", &frame_hum, GAlignRight, U_ASCII_ARIAL_16, GColorWhite);
 
-    /*添加数据提示信息*/
+    /*底部信息*/
     GRect frame_zzes = {{0,110}, {16, 128}};
     add_text_layer(p_window, &g_layer_id_zzes, "治电科技", &frame_zzes, GAlignBottom, U_ASCII_ARIAL_16, GColorWhite);
         
-    /*添加数据*/
+    /*数据读取前占位*/
     GRect frame_data = {{0,60}, {16, 128}};
     add_text_layer(p_window, &g_layer_id_data, "waiting", &frame_data, GAlignCenter , U_ASCII_ARIAL_42, GColorWhite);
     
@@ -229,6 +231,7 @@ static void web_recv_callback(const uint8_t *buff, uint16_t size)
     app_window_update(h_window);
 }
 
+//时间变化回调
 static void watch_time_change_callback(enum SysEventType type, void *context)
 {
     /*时间更改，分变化*/
