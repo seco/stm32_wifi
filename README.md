@@ -783,3 +783,116 @@ static void web_recv_callback(const uint8_t *buff, uint16_t size)
 
 ![maibu手表显示](http://upload-images.jianshu.io/upload_images/2245742-aca208371be9a8bb.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
+
+
+>今天完成的是手机端的开发，很简单，DCloud混合开发，用ajax来获取数据，然后EChart显示数据。
+代码地址：https://github.com/klren0312/stm32_wifi
+2017.3.26
+
+
+
+# 十二、DCloud手机端
+
+## 1.DCloud
+>主要用的是他们家的MUI。
+
+1）介绍
+官方介绍：最接近原生APP体验的高性能前端框架
+网址：http://dev.dcloud.net.cn/mui/
+
+2）开发工具
+非常好用的前端开发工具，HBuilder。
+
+![QQ截图20170326210431.png](http://upload-images.jianshu.io/upload_images/2245742-894c7397ae158b28.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+## 2.相关代码
+
+1）AJAX请求代码
+使用的是mui封装好的函数
+```
+mui.getJSON('http://10.127.5.188:3000/tem',function(data){
+	lineChart.setOption({	 			    	       
+	    	series: [{
+	   	    // 根据名字对应到相应的系列
+	    	    name: '温度',
+	     	    data: data
+	     	}]
+	});
+	temChart.setOption({
+		series:[{
+			data: [{value: data[data.length-1], name: '温度'}]
+		}]
+	})				
+});
+	
+mui.getJSON('http://10.127.5.188:3000/hum',function(data){
+	lineChart.setOption({	 			    	       
+	   	series: [{
+	   		// 根据名字对应到相应的系列
+	   		name: '湿度',
+	   		data: data
+	   	}]
+    });
+    					
+    humChart.setOption({
+    	series:[{
+    		data: [{value: data[data.length-1], name: '湿度'}]
+    	}]
+    })
+});		
+```
+
+2）创建子界面
+```
+mui.init({
+	swipeBack: false,
+	statusBarBackground: '#f7f7f7',
+	tureConfig: {
+		doubletap: true
+	},
+	subpages: [{
+		id: 'list',
+		url: 'list.html',
+		styles: {
+			top: '45px',
+			bottom: 0,
+			bounce: 'vertical'
+		}
+	}]
+});
+```
+
+3）页面跳转代码
+```
+document.getElementById('device1').addEventListener('tap', function() {
+  	mui.openWindow({
+  		url:'pages/device1.html',
+  		id:'pages/device1.html',
+  		show:{
+  			aniShow:"pop-in"
+  	    }
+  	})
+});
+```
+
+## 3.结果截图
+1）两种打包方式
+
+![QQ截图20170326211112.png](http://upload-images.jianshu.io/upload_images/2245742-afed53f8c9c6efbe.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+2）应用截图
+
+![Screenshot_20170326-211147.png](http://upload-images.jianshu.io/upload_images/2245742-ac20738c2b39ea66.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+![Screenshot_20170326-211156.png](http://upload-images.jianshu.io/upload_images/2245742-5afa7562ee1368e3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+![Screenshot_20170326-211738.png](http://upload-images.jianshu.io/upload_images/2245742-3c06e1a5c808e54c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+## 4.总结
+DCloud就那样，如果再让我选择一次的话，我选择APPCAN。。。
+
