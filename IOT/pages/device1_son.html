@@ -1,0 +1,338 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<style type="text/css">
+			.chart{
+				height: 200px;
+				margin: 0px;
+				padding: 0px;
+			}
+			h5{
+				margin-top: 30px;
+				font-weight: bold;
+			}
+			h5:first-child{
+				margin-top: 15px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="mui-content">
+			<div class="mui-content-padded">
+				<p style="text-indent: 22px;text-align:center;font-size: 1.1em;">
+					设备一
+				</p>
+			</div>
+			 
+			<div class="mui-content-padded">
+				<h5>实时温度仪表</h5>
+				<div class="chart" id="temChart"></div>
+				<h5>实时湿度仪表</h5>
+				<div class="chart" id="humChart"></div>
+				<h5>温湿度历史数据折线图</h5>
+				<div class="chart" id="lineChart"></div>
+			</div>
+			
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../libs/echarts.js"></script>
+		<script type="text/javascript">
+			function getData(){
+				mui.getJSON('http://10.127.5.188:3000/tem',function(data){
+					lineChart.setOption({	 			    	       
+	   			    	series: [{
+	   			    	    // 根据名字对应到相应的系列
+	   			    	    name: '温度',
+	   			    	    data: data
+	   			    	}]
+					});
+					temChart.setOption({
+						series:[{
+							data: [{value: data[data.length-1], name: '温度'}]
+						}]
+					})				
+				});
+	
+				mui.getJSON('http://10.127.5.188:3000/hum',function(data){
+					lineChart.setOption({	 			    	       
+	   			    	series: [{
+	   			    	    // 根据名字对应到相应的系列
+	   			    	    name: '湿度',
+	   			    	    data: data
+	   			    	}]
+					});
+					
+					humChart.setOption({
+						series:[{
+							data: [{value: data[data.length-1], name: '湿度'}]
+						}]
+					})
+				});		
+ 
+			}
+			setInterval(getData(),10);
+ 
+			var lineChart = echarts.init(document.getElementById('lineChart'));
+			var temChart = echarts.init(document.getElementById('temChart'));
+			var humChart = echarts.init(document.getElementById('humChart'));
+
+				
+ 
+ 	
+			
+			//配置温湿度折线图
+			var colors = ['#5793f3', '#d14a61', '#675bba'];
+			var option ={
+				color:colors,
+				tooltip: {
+			        trigger: 'none',
+			        axisPointer: {
+			            type: 'cross'
+			        }
+			    },//提示框
+				grid: {
+						x: 35,
+						x2: 10,
+						y: 50,
+						y2: 25
+				},
+				legend:{//图例组件
+					data:['温度','湿度']
+				},
+				
+				xAxis:[{
+					type: 'category',
+		            axisTick: {
+		                alignWithLabel: true
+		            },
+		            axisLine: {
+		                onZero: false,
+		                lineStyle: {
+		                    color: colors[0]
+		                }
+		            },
+		            axisPointer: {
+		                label: {
+		                    formatter: function (params) {
+		                        return '温度  ' + params.value + '：' + params.seriesData[0].data;
+		                    }
+		                }
+		            },
+					data:["1","2","3","4","最新"]
+				},
+				{
+		            type: 'category',
+		            axisTick: {
+		                alignWithLabel: true
+		            },
+		            axisLine: {
+		                onZero: false,
+		                lineStyle: {
+		                    color: colors[1]
+		                }
+		            },
+		            axisPointer: {
+		                label: {
+		                    formatter: function (params) {
+		                        return '湿度  ' + params.value + '：' + params.seriesData[0].data;
+		                    }
+		                }
+		            },
+		            data:["1","2","3","4","最新"]
+       			}
+				],
+				yAxis:{},
+				series: [{
+	        		name: '温度',
+	       			type: 'line',
+	        		data: []
+	    		},{
+	    			name:"湿度",
+	    			type:'line',
+	    			data:[]
+	    		}]
+			};			 
+			
+			//配置温度实时仪表盘
+			var temOption ={
+				backgroundColor: '#293C55',
+				tooltip : {
+					formatter:"{a} <br/> {c} {b}"
+				},
+				toolbox:{
+					show:true,
+					feature:{
+						mark : {show: true},
+						restore : {show: true},
+						saveAsImage : {show: true}
+					}
+				},
+				series : [
+					{
+						name:'温度',
+						type:'gauge',
+						min:-20,
+						max:50,
+						splitNumber:10,
+						radius: '90%',
+						axisLine:{
+							lineStyle:{
+								color: [[0.09, 'lime'],[0.82, '#1e90ff'],[1, '#ff4500']],
+								width:3,
+								shadowColor: '#fff',//默认透明
+								shadowBlur : 10
+							}
+						},
+						axisLabel:{ //坐标小标记
+							textStyle:{
+								fontWeight:'bolder',
+								color:'#fff',
+								shadowColor:'#fff',//默认透明
+								shadowBlur: 10
+							}
+						},
+						axisTick:{ //坐标小标记
+							length:15,
+							lineStyle:{
+								color : 'auto',
+								shadowColor : '#fff',//默认透明
+								shadowBlur:10
+							}
+						},
+						splitLine:{ //分割线
+							length: 25, //属性length控制线长
+							lineStyle:{
+								width:3,
+								color:'#fff',
+								shadowColor:'#fff', //默认透明
+								shadowBlur:10
+							}
+						},
+						pointer:{ //分割线
+							shadowColor: '#fff', //默认透明
+							shadowBlur: 5
+						},
+						title:{
+							textStyle:{
+								fontWeight:'bolder',
+								fontSize:20,
+								fontStyle:'italic',
+								color:'#fff',
+								shadowColor:'#fff',//默认透明
+								shadowBlur: 10
+							}
+						},
+						detail:{
+							backgroundColor:'rgba(30,144,255,0.8)',
+							borderWidth:1,
+							borderColor:'#fff',
+							shadowColor:'#fff',//默认透明
+							offsetCenter:[0,'50%'],
+							textStyle:{
+								fontWeight:'bolder',
+								color:'#fff'
+							}
+						},
+						data:[]
+					}
+				]
+			}
+	
+			//配置湿度实时仪表盘
+			var humOption = {
+				backgroundColor: '#293C55',
+				tooltip : {
+					formatter:"{a} <br/> {c} {b}"
+				},
+				toolbox:{
+					show:true,
+					feature:{
+						mark : {show: true},
+						restore : {show: true},
+						saveAsImage : {show: true}
+					}
+				},
+				series : [
+					{
+						name:'湿度',
+						type:'gauge',
+						min:20,
+						max:100,
+						splitNumber:10,
+						radius: '90%',
+						axisLine:{
+							lineStyle:{
+								color: [[0.09, 'lime'],[0.82, '#1e90ff'],[1, '#ff4500']],
+								width:3,
+								shadowColor: '#fff',//默认透明
+								shadowBlur : 10
+							}
+						},
+						axisLabel:{ //坐标小标记
+							textStyle:{
+								fontWeight:'bolder',
+								color:'#fff',
+								shadowColor:'#fff',//默认透明
+								shadowBlur: 10
+							}
+						},
+						axisTick:{ //坐标小标记
+							length:15,
+							lineStyle:{
+								color : 'auto',
+								shadowColor : '#fff',//默认透明
+								shadowBlur:10
+							}
+						},
+						splitLine:{ //分割线
+							length: 25, //属性length控制线长
+							lineStyle:{
+								width:3,
+								color:'#fff',
+								shadowColor:'#fff', //默认透明
+								shadowBlur:10
+							}
+						},
+						pointer:{ //分割线
+							shadowColor: '#fff', //默认透明
+							shadowBlur: 5
+						},
+						title:{
+							textStyle:{
+								fontWeight:'bolder',
+								fontSize:20,
+								fontStyle:'italic',
+								color:'#fff',
+								shadowColor:'#fff',//默认透明
+								shadowBlur: 10
+							}
+						},
+						detail:{
+							backgroundColor:'rgba(30,144,255,0.8)',
+							borderWidth:1,
+							borderColor:'#fff',
+							shadowColor:'#fff',//默认透明
+							offsetCenter:[0,'50%'],
+							textStyle:{
+								fontWeight:'bolder',
+								color:'#fff'
+							}
+						},
+						data:[]
+					}
+				]
+			}			
+			
+			lineChart.setOption(option);
+			temChart.setOption(temOption);
+			humChart.setOption(humOption);
+		</script>
+	</body>
+
+</html>
