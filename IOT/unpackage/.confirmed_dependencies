@@ -1,0 +1,38 @@
+{
+  "pages/device1.html": {
+    "href": "pages/device1.html",
+    "resources": [
+      "css/mui.min.css",
+      "css/app.css",
+      "js/mui.min.js",
+      "libs/echarts.js"
+    ],
+    "refer": [],
+    "priority": 0
+  },
+  "list.html": {
+    "href": "list.html",
+    "resources": [
+      "css/mui.min.css",
+      "js/mui.min.js",
+      "imgs/zvd.png"
+    ],
+    "refer": [
+      "pages/device1.html"
+    ],
+    "priority": 0
+  },
+  "index.html": {
+    "href": "index.html",
+    "resources": [
+      "css/mui.min.css",
+      "js/mui.min.js",
+      "imgs/zvd.png"
+    ],
+    "refer": [
+      "list.html",
+      "pages/device1.html"
+    ],
+    "priority": 0
+  }
+}
