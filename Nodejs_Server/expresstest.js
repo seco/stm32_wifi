@@ -54,6 +54,24 @@ app.get('/hum',function(req,res) {
 	})
 	 
 });
+//时间推送
+app.get('/time',function(req,res){
+	var time = [];
+	conn.query('SELECT * FROM env',function(err,rows,fields){
+		var i = rows.length;
+		var j = i - 5;
+		var c = 0 ;
+		while(j<i){
+			var timeorigin= rows[j].time;
+			var timeafter= timeorigin.split(" ");
+			time[c] = timeafter[1];
+			c++;
+			j++;
+		}
+
+		res.send(JSON.stringify(time));
+	})
+})
 //手表推送
 app.get('/watch',function(req,res){
 	var tem = [];
