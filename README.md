@@ -897,3 +897,106 @@ document.getElementById('device1').addEventListener('tap', function() {
 ## 4.总结
 DCloud就那样，如果再让我选择一次的话，我选择APPCAN。。。
 
+
+
+>一些增加和改动。
+代码地址：https://github.com/klren0312/stm32_wifi
+2017.3.30
+
+
+
+# 十三、第一次增补
+## 增加时间
+>原本想着单片机传到tcp服务器的时候就获取时间，感觉不会
+所有选择在tcp服务器将数据存入数据库的时候，通过nodejs来获取时间，然后一起存到数据库。
+
+1）获取时间
+```
+arr.time = new Date().toLocaleString();
+```
+
+2）将时间一起放到json里,然后存到数据库
+```
+var text =JSON.parse(data.toString());
+var arr = {};
+arr.tem = text.temperature;
+arr.hum = text.humidity;
+arr.indoor = text.Red_Led;
+arr.time = new Date().toLocaleString();
+arr.x = text.Xg;
+arr.y = text.Yg;
+arr.z = text.Zg;
+conn.query('INSERT INTO pet SET ?', arr, function(error,result,fields){
+    if (error) throw error;
+});
+```
+
+## 2.接口服务器处理时间，并提供接口
+>由于`new Date().toLocaleString();`提供的时间格式是`"2017/3/30 上午10:30:07"`,而我们只使用后面的具体时间，不用日期。所以我们需要处理一下，在暴露出去。
+
+1）处理时间
+使用split函数，分隔符为空格，然后将空格前后的数据存入数组，我们只要下标为1的那个数据即可。
+```
+var timeorigin= rows[j].time;
+var timeafter= timeorigin.split(" ");
+```
+
+![处理时间](http://upload-images.jianshu.io/upload_images/2245742-b5226d786a9ef7ab.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+2）然后就是提供接口，提供最新的五个
+```
+app.get('/time',function(req,res){
+    var time = [];
+    conn.query('SELECT * FROM pet',function(err,rows,fields){
+        var i = rows.length;
+        var j = i - 5;
+        var c = 0 ;
+        while(j<i){
+            //事件处理
+            var timeorigin= rows[j].time;
+            var timeafter= timeorigin.split(" ");
+            //处理后的时间存入数组
+            time[c] = timeafter[1];
+            c++;
+            j++;
+        }
+        res.send(JSON.stringify(time));
+    })
+})
+```
+
+## 3.前端获取时间，并显示到折线图
+>在ECharts折线图的x轴显示时间
+
+1）获取显示代码
+```
+fetch("http://127.0.0.1:3000/time")
+    .then(status)
+    .then(json)
+    .then(function(data){
+        // 折线图湿度
+        myChart.setOption({
+            xAxis:{
+                data:data
+            }
+        });
+    })
+    .catch(function(err){
+        console.log("Fetch错误:"+err);
+    });
+```
+
+## 4.结果显示
+1）数据库
+
+![数据库](http://upload-images.jianshu.io/upload_images/2245742-3a87a8542803e941.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+
+2）折线图X轴时间显示
+
+
+![折线图X轴时间显示](http://upload-images.jianshu.io/upload_images/2245742-762fc5b137d3333c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
