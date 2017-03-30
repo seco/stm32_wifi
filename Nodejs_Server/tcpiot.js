@@ -15,10 +15,14 @@ net.createServer(function(socket){
 		console.log('got:',data.toString());
 
 		var text = JSON.parse(data.toString());
-		console.log(text);
-		console.log(text.tem)
-		console.log(text.hum)
-		conn.query('INSERT INTO env SET ?', text, function(error,result,fields){
+		var arr = {};
+		arr.tem = text.tem;
+		arr.hum = text.hum;
+		arr.time = new Date().toLocaleString();
+		// console.log(text);
+		// console.log(text.tem)
+		// console.log(text.hum)
+		conn.query('INSERT INTO env SET ?', arr, function(error,result,fields){
 			if (error) throw error;
 		});
 
