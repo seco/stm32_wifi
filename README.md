@@ -24,6 +24,7 @@
 [搭建简易的物联网服务端-整合（八）](http://www.jianshu.com/p/e8ab20c70b5f)
 [搭建简易的物联网服务端-Maibu显示（九）](http://www.jianshu.com/p/54af2d858908)
 [搭建简易的物联网服务端-DCloud手机端（十）](http://www.jianshu.com/p/61f236902b8b)
+[搭建简易的物联网服务端-第一次增补（十一）](http://www.jianshu.com/p/9f19445453a7)
 
 
 # 一、单片机相关代码(只提供网络相关代码)
