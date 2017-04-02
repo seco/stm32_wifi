@@ -134,7 +134,6 @@ float SHT2x_CalcTemperatureC(unsigned short u16sT)
 {
 	
     float temperatureC = 0;            // variable for result
-
     u16sT &= ~0x0003;           // clear bits [1..0] (status bits)
     //-- calculate temperature [°C] --
     temperatureC = -46.85 + 175.72 / 65536 * (float)u16sT; //T= -46.85 + 175.72 * ST/2^16

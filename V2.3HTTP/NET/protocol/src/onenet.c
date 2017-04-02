@@ -52,7 +52,7 @@
 
 
 
-ONETNET_INFO oneNetInfo = {"119.29.201.31", "4001", 0, 0, 0, 0};
+ONETNET_INFO oneNetInfo = {"192.168.23.1", "4001", 0, 0, 0, 0};
 extern DATA_STREAM dataStream[];
 
 
