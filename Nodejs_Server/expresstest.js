@@ -1,7 +1,7 @@
 var express = require('express');
 var mysql = require('mysql');
 app = express();
-
+app.use('/static',express.static('public'));
 //数据库配置
 var conn = mysql.createConnection({
 	host:'localhost',
@@ -25,7 +25,7 @@ app.all('*',function(req,res,next){
 //温度
 app.get('/tem',function(req,res){
 	var tem = [];
-	conn.query('SELECT * FROM env',function(err,rows,fields){
+	conn.query('SELECT * FROM pet',function(err,rows,fields){
 		var i  = rows.length;
 		var i = rows.length;
 		var j =i-5;
@@ -41,7 +41,7 @@ app.get('/tem',function(req,res){
 //湿度
 app.get('/hum',function(req,res) {
 	var hum = [];
-	conn.query('SELECT * FROM env',function(err,rows,fields){
+	conn.query('SELECT * FROM pet',function(err,rows,fields){
 		var i = rows.length;
 		var j =i-5;
 		var c= 0;
@@ -57,7 +57,7 @@ app.get('/hum',function(req,res) {
 //时间推送
 app.get('/time',function(req,res){
 	var time = [];
-	conn.query('SELECT * FROM env',function(err,rows,fields){
+	conn.query('SELECT * FROM pet',function(err,rows,fields){
 		var i = rows.length;
 		var j = i - 5;
 		var c = 0 ;
@@ -75,7 +75,7 @@ app.get('/time',function(req,res){
 //手表推送
 app.get('/watch',function(req,res){
 	var tem = [];
-	conn.query('SELECT * FROM env',function(err,rows,fields){
+	conn.query('SELECT * FROM pet',function(err,rows,fields){
 		var tem = "{ \"temhum\" :" + "\"" + rows[rows.length-1].tem + "  |  " 
 		+ rows[rows.length-1].hum +  "\""  + "}";
 		res.send(tem);
