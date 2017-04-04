@@ -1,0 +1,204 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "0.1.0",
+        "title": "治电物联网API",
+    },
+    "host": "localhost:3000",
+    "tags": [{
+        "name": "tem",
+        "description": "温度接口"
+    }, {
+        "name": "hum",
+        "description": "湿度接口"
+    }, {
+        "name": "time",
+        "description": "时间接口"
+    }, {
+        "name": "watch",
+        "description": "手表接口"
+    }],
+    "schemes": ["http"],
+    "paths": {
+        "/tem": {
+            "get": {
+                "tags": ["tem"],
+                "description": "GET `tem` 对象.\n从数据库获取最新的五个温度\n",
+                "responses": {
+                    "200": {
+                        "description": "成功回应",
+                        "schema": {
+                            "title": "ArrayOftem",
+                            "type": "object",
+                            "items": {
+                                "title": "tem",
+                                "type": "array"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/hum": {
+            "get": {
+                "tags": ["hum"],
+                "description": "GET `hum` 对象.\n从数据库获取最新的五个湿度\n",
+                "responses": {
+                    "200": {
+                        "description": "成功回应",
+                        "schema": {
+                            "title": "ArrayOftem",
+                            "type": "object",
+                            "items": {
+                                "title": "hum",
+                                "type": "array"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/time": {
+            
+            "get": {
+                "tags": ["time"],
+                "description": "GET `time` 对象.\n从数据库获取最新的五个时间\n",
+                "responses": {
+                    "200": {
+                        "description": "成功回应",
+                        "schema": {
+                            "title": "ArrayOftem",
+                            "type": "object",
+                            "items": {
+                                "title": "time",
+                                "type": "array"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/watch": {
+
+            "get": {
+                "tags": ["watch"],
+                "description": "GET `watch` 对象.\n从数据库获取最新的温湿度\n",
+                "responses": {
+                    "200": {
+                        "description": "成功回应",
+                        "schema": {
+                            "title": "ArrayOftem",
+                            "type": "object",
+                            "items": {
+                                "title": "watch",
+                                "type": "array"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "tem": {
+            "type": "object",
+            "required": ["name", "tem"],
+            "properties": {
+                "photoUrls": {
+                    "type": "array",
+                    "xml": {
+                        "name": "tem",
+                        "wrapped": true
+                    },
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "status": {
+                    "type": "string",
+                    "description": "温度",
+                    "enum": ["1", "2", "3","4","5"]
+                }
+            },
+            "xml": {
+                "name": "tem"
+            }
+        },
+        "hum": {
+            "type": "object",
+            "required": ["name", "hum"],
+            "properties": {
+                "photoUrls": {
+                    "type": "array",
+                    "xml": {
+                        "name": "hum",
+                        "wrapped": true
+                    },
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "status": {
+                    "type": "string",
+                    "description": "湿度",
+                    "enum": ["1", "2", "3","4","5"]
+                }
+            },
+            "xml": {
+                "name": "hum"
+            }
+        },
+        "time": {
+            "type": "object",
+            "required": ["name", "time"],
+            "properties": {
+                "photoUrls": {
+                    "type": "array",
+                    "xml": {
+                        "name": "time",
+                        "wrapped": true
+                    },
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "status": {
+                    "type": "string",
+                    "description": "湿度",
+                    "enum": ["1", "2", "3","4","5"]
+                }
+            },
+            "xml": {
+                "name": "time"
+            }
+        },
+        "watch": {
+            "type": "object",
+            "required": ["name", "watch"],
+            "properties": {
+                "photoUrls": {
+                    "type": "array",
+                    "xml": {
+                        "name": "watch",
+                        "wrapped": true
+                    },
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "status": {
+                    "type": "string",
+                    "description": "湿度",
+                    "enum": ["1", "2", "3","4","5"]
+                }
+            },
+            "xml": {
+                "name": "watch"
+            }
+        },                  
+    },
+    "externalDocs": {
+        "description": "Find out more about Swagger",
+        "url": "http://swagger.io"
+    }
+}
