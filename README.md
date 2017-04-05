@@ -14,17 +14,18 @@
  - node-mysql
 
 
-[搭建简易的物联网服务端-STM32（一）](http://www.jianshu.com/p/233ce211446f)
-[搭建简易的物联网服务端-Nodejs_net（二）](http://www.jianshu.com/p/289683c96346)
-[搭建简易的物联网服务端-Nodejs_mysql（三）](http://www.jianshu.com/p/3ec5b5ec53a5)
-[搭建简易的物联网服务端-net+mysql（四）](http://www.jianshu.com/p/80eff97e39b6)
-[搭建简易的物联网服务端-第一次融合（五）](http://www.jianshu.com/p/16799e256e0a)
-[搭建简易的物联网服务端-Nodejs_express服务（六）](http://www.jianshu.com/p/462144651ee8)
-[搭建简易的物联网服务端-ECharts数据显示（七）](http://www.jianshu.com/p/855d7fc25d10)
-[搭建简易的物联网服务端-整合（八）](http://www.jianshu.com/p/e8ab20c70b5f)
-[搭建简易的物联网服务端-Maibu显示（九）](http://www.jianshu.com/p/54af2d858908)
-[搭建简易的物联网服务端-DCloud手机端（十）](http://www.jianshu.com/p/61f236902b8b)
-[搭建简易的物联网服务端-第一次增补（十一）](http://www.jianshu.com/p/9f19445453a7)
+[搭建简易的物联网服务端和客户端-STM32（一）](http://www.jianshu.com/p/233ce211446f)
+[搭建简易的物联网服务端和客户端-Nodejs_net（二）](http://www.jianshu.com/p/289683c96346)
+[搭建简易的物联网服务端和客户端-Nodejs_mysql（三）](http://www.jianshu.com/p/3ec5b5ec53a5)
+[搭建简易的物联网服务端和客户端-net+mysql（四）](http://www.jianshu.com/p/80eff97e39b6)
+[搭建简易的物联网服务端和客户端-第一次融合（五）](http://www.jianshu.com/p/16799e256e0a)
+[搭建简易的物联网服务端和客户端-Nodejs_express服务（六）](http://www.jianshu.com/p/462144651ee8)
+[搭建简易的物联网服务端和客户端-ECharts数据显示（七）](http://www.jianshu.com/p/855d7fc25d10)
+[搭建简易的物联网服务端和客户端-整合（八）](http://www.jianshu.com/p/e8ab20c70b5f)
+[搭建简易的物联网服务端和客户端-Maibu显示（九）](http://www.jianshu.com/p/54af2d858908)
+[搭建简易的物联网服务端和客户端-DCloud手机端（十）](http://www.jianshu.com/p/61f236902b8b)
+[搭建简易的物联网服务端和客户端-第一次增补（十一）](http://www.jianshu.com/p/9f19445453a7)
+[搭建简易的物联网服务端和客户端-第二次增补（十二）](http://www.jianshu.com/p/bf0103f3b783)
 
 
 # 一、单片机相关代码(只提供网络相关代码)
@@ -999,5 +1000,52 @@ fetch("http://127.0.0.1:3000/time")
 
 
 ![折线图X轴时间显示](http://upload-images.jianshu.io/upload_images/2245742-762fc5b137d3333c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+>Swagger 建立 api文档
+代码地址：https://github.com/klren0312/stm32_wifi
+2017.4.4
+
+# 十四、第二次增补
+
+## 1.Swagger
+（1）介绍
+The World's Most Popular API Framework（世界最流行的API模板）。
+
+（2）工具
+
+ - Swagger Editor api文档编辑
+ - Swagger Codegen 代码生成
+ - Swagger UI 显示界面
+
+（3）网址
+http://swagger.io/
+
+![swagger](http://upload-images.jianshu.io/upload_images/2245742-9639668083d15cd0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+
+## 2.api文档制作
+（1）Swagger Editor编写
+
+ - ![1](http://upload-images.jianshu.io/upload_images/2245742-c9c33ecfc0542ca6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+ - ![2](http://upload-images.jianshu.io/upload_images/2245742-f437cb3e1686a09e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+ - ![3](http://upload-images.jianshu.io/upload_images/2245742-b4826e42e4c38d29.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+（2）Swagger UI界面
+1.在express中定义静态文件路由`app.use('/static',express.static('public'));`
+2.将Swagger UI 代码clone到本地 `git clone https://github.com/swagger-api/swagger-ui.git`
+3.在express项目文件夹中，新建一个叫`public`文件夹，将clone后的代码中的`dist`文件下所有文件复制到`public`文件夹。
+4.`http://localhost:3000/static/index.html`访问即可
+![QQ截图20170404161611.png](http://upload-images.jianshu.io/upload_images/2245742-4206bba9b07bb2aa.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+## 3.界面测试
+
+![QQ截图20170404161842.png](http://upload-images.jianshu.io/upload_images/2245742-f268ccec9c8115bd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+![QQ截图20170404161852.png](http://upload-images.jianshu.io/upload_images/2245742-96dea4827dd7fb66.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
 
 
