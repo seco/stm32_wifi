@@ -10,18 +10,23 @@ var conn = mysql.createConnection({
 conn.connect();
 
 //查询
-conn.query('SELECT * from env',function(err,rows,fields){
-	if (err) throw err;
-	var i = rows.length;
-	var j =i-1;
-	console.log(i);
-	while(j>=i-5){
-		console.log(rows[j].hum);
-		j--;
-	}
-	console.log(rows[0].tem);
-	console.log(rows[1].tem);
-	console.log(rows[2]);
+// conn.query('SELECT * from pet',function(err,rows,fields){
+// 	if (err) throw err;
+// 	var i = rows.length;
+// 	var j =i-1;
+// 	console.log(i);
+// 	while(j>=i-5){
+// 		console.log(rows[j].hum);
+// 		j--;
+// 	}
+// 	console.log(rows[0].tem);
+// 	console.log(rows[1].tem);
+// 	console.log(rows[2]);
+// });
+
+
+conn.query('DELETE FROM pet WHERE id NOT IN ( SELECT id FROM ( SELECT id FROM pet ORDER BY id DESC LIMIT 5 ) foo )',function(err,rows,fields){
+    if (err) throw err;      
 });
 
 // //增加
@@ -36,7 +41,7 @@ conn.query('SELECT * from env',function(err,rows,fields){
 // });
 
 // //删除
-// conn.query('DELETE FROM env WHERE tem=?',[12],function(error,result,fields){
+// conn.query('DELETE FROM pet LIMIT ?',[3],function(error,result,fields){
 // 	if (error) throw error;
 // 	console.log('delete  '+ result.affectedRows + '  rows');
 // })
