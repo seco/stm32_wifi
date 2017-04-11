@@ -22,6 +22,9 @@ net.createServer(function(socket){
 		// console.log(text);
 		// console.log(text.tem)
 		// console.log(text.hum)
+		conn.query('DELETE FROM env WHERE id NOT IN ( SELECT id FROM ( SELECT id FROM pet ORDER BY id DESC LIMIT 5 ) foo )',function(error,result,fields){
+			if (error) throw error;
+		})
 		conn.query('INSERT INTO env SET ?', arr, function(error,result,fields){
 			if (error) throw error;
 		});
