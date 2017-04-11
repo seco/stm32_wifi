@@ -14,6 +14,7 @@
  - node-mysql
 
 
+文章列表：
  - [搭建简易的物联网服务端和客户端-STM32（一）](http://www.jianshu.com/p/233ce211446f)
  - [搭建简易的物联网服务端和客户端-Nodejs_net（二）](http://www.jianshu.com/p/289683c96346)
  - [搭建简易的物联网服务端和客户端-Nodejs_mysql（三）](http://www.jianshu.com/p/3ec5b5ec53a5)
@@ -26,6 +27,8 @@
  - [搭建简易的物联网服务端和客户端-DCloud手机端（十）](http://www.jianshu.com/p/61f236902b8b)
  - [搭建简易的物联网服务端和客户端-第一次增补（十一）](http://www.jianshu.com/p/9f19445453a7)
  - [搭建简易的物联网服务端和客户端-第二次增补（十二）](http://www.jianshu.com/p/bf0103f3b783)
+ - [搭建简易的物联网服务端和客户端-数据库功能增加（十三）](http://www.jianshu.com/p/b88704af9ac5)
+ - [搭建简易的物联网服务端和客户端-微博接口（十四）](http://www.jianshu.com/p/82591f02530a)
 
 
 # 一、单片机相关代码(只提供网络相关代码)
@@ -1049,3 +1052,50 @@ http://swagger.io/
 
 
 
+>数据库没学好，导致这个问题想了两天，最后还是靠google。。。
+代码地址：https://github.com/klren0312/stm32_wifi
+2017.4.9
+
+
+# 十五、数据库功能增加
+>原来的数据是一直向下存储，导致数据库数据原来越多，我的想法就是只保留最新的五个，其他的都删除。
+
+## 1.stackoverflow
+（1）介绍
+是一个与程序相关的IT技术问答网站。用户可以在网站免费提交问题，浏览问题，索引相关内容，在创建主页的时候使用简单的HTML。在问题页面，不会弹出任何广告，销售信息，JavaScript 窗口等。（百度百科）
+
+## 2.解决方案
+
+
+![QQ截图20170409104041.png](http://upload-images.jianshu.io/upload_images/2245742-2e1a36c7ba35fd73.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+
+
+## 3.测试代码
+>只保留最后五行数据，也就是最新的五个数据
+```
+conn.query('DELETE FROM pet WHERE id NOT IN ( SELECT id FROM ( SELECT id FROM pet ORDER BY id DESC LIMIT 5 ) foo )',function(err,rows,fields){
+    if (err) throw err;      
+});
+```
+
+## 4.结果
+（1）执行前
+
+
+![QQ截图20170409111504.png](http://upload-images.jianshu.io/upload_images/2245742-7e48c7379a5a31b1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+
+（2）执行后
+
+
+![QQ截图20170409111552.png](http://upload-images.jianshu.io/upload_images/2245742-03fd5088c5dcf5a4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+
+
+（3）由于id我采用的是自动递增，所以删除前面的之后，后面的id不会重新从1开始排序，这个问题不大。
+
+@治电小白菜20170409
