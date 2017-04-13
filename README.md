@@ -1242,4 +1242,63 @@ var j = schedule.scheduleJob(rule,function(){
 });
 ```
 
-@治电小白菜20170410
+>将获取到的温湿度和其他信息通过微博发布
+代码地址：https://github.com/klren0312/stm32_wifi
+2017.4.12
+
+
+
+# 十七、微博发送信息
+## 1.配置数据库
+```
+var mysql = require('mysql');
+//数据库配置
+var conn = mysql.createConnection({
+    host:'localhost',
+    user:'root',
+    password:'root',
+    database:'nodemysql',
+    port:3306
+});
+//连接数据库
+conn.connect();
+```
+
+## 2.微博发送
+>从数据库中获取到最新的传感器信息,然后通过微博发送
+
+```
+conn.query('SELECT * FROM pet',function(err,rows,fields){
+    var indoor;
+    if (rows[rows.length-1].indoor == 1) {
+        indoor = "on the home";
+    }else{
+        indoor = "not on the home";
+    }
+    //组成信息字符串
+    var tem = "  temperature:"  + rows[rows.length-1].tem +"'C  ||  Pet:"+indoor 
+    +"  ||  humidity:"+ rows[rows.length-1].hum + "%  ||  by ZZES_IOT";
+    //微博发送json
+    var para = {
+        "access_token":"2.00IlvKmF05EX2B7c5e17d246vKldGE",
+        "status":tem
+    }
+    //微博发送
+    Weibo.Statuses.update(para,function(data){
+        console.log(data);
+    })
+})
+```
+
+## 3.现象结果
+（1）后台打印的log
+
+
+![QQ截图20170412082224.png](http://upload-images.jianshu.io/upload_images/2245742-aa5e7e8911e70393.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+（2）微博效果
+
+![QQ截图20170412083821.png](http://upload-images.jianshu.io/upload_images/2245742-7fe2d0c67c063dde.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
