@@ -1,0 +1,17 @@
+--cpu Cortex-M3
+".\output\core_cm3.o"
+".\output\stm32f10x_it.o"
+".\output\system_stm32f10x.o"
+".\output\startup_stm32f10x_hd.o"
+".\output\misc.o"
+".\output\stm32f10x_gpio.o"
+".\output\stm32f10x_rcc.o"
+".\output\stm32f10x_usart.o"
+".\output\delay.o"
+".\output\usart.o"
+".\output\led.o"
+".\output\main.o"
+--strict --scatter ".\output\stmf10x-demo.sct"
+--summary_stderr --info summarysizes --map --xref --callgraph --symbols
+--info sizes --info totals --info unused --info veneers
+--list ".\listing\stmf10x-demo.map" -o .\output\stmf10x-demo.axf

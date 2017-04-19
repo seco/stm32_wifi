@@ -1,0 +1,52 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: μVision V5.22.0.0
+Copyright (C) 2016 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: klren Dell, zzes, LIC=4ZLKP-MEI5V-KSBYM-X2RW3-Q16V5-ZNPTY
+ 
+Tool Versions:
+Toolchain:       MDK-ARM Professional  Version: 5.22
+Toolchain Path:  E:\Keil_v5\ARM\ARMCC\Bin
+C Compiler:      Armcc.exe V5.06 update 4 (build 422)
+Assembler:       Armasm.exe V5.06 update 4 (build 422)
+Linker/Locator:  ArmLink.exe V5.06 update 4 (build 422)
+Library Manager: ArmAr.exe V5.06 update 4 (build 422)
+Hex Converter:   FromElf.exe V5.06 update 4 (build 422)
+CPU DLL:         SARMCM3.DLL V5.22
+Dialog DLL:      DARMSTM.DLL V1.67.0.0
+Target DLL:      STLink\ST-LINKIII-KEIL_SWO.dll V2.0.18.0
+Dialog DLL:      TARMSTM.DLL V1.66.0.0
+ 
+<h2>Project:</h2>
+D:\OneNET\4.串口打印-接收中断\stmf10x-demo.uvproj
+Project File Date:  04/19/2017
+
+<h2>Output:</h2>
+*** Using Compiler 'V5.06 update 4 (build 422)', folder: 'E:\Keil_v5\ARM\ARMCC\Bin'
+Rebuild target 'USART'
+compiling core_cm3.c...
+assembling startup_stm32f10x_hd.s...
+compiling system_stm32f10x.c...
+compiling stm32f10x_it.c...
+compiling misc.c...
+compiling stm32f10x_gpio.c...
+compiling stm32f10x_rcc.c...
+compiling stm32f10x_usart.c...
+compiling delay.c...
+compiling usart.c...
+hardware\src\usart.c(244): warning:  #223-D: function "vsprintf" declared implicitly
+  	vsprintf((char *)UsartPrintfBuf, fmt, ap);							//格式化
+hardware\src\usart.c: 1 warning, 0 errors
+compiling led.c...
+compiling main.c...
+linking...
+Program Size: Code=11104 RO-data=852 RW-data=48 ZI-data=2208  
+FromELF: creating hex file...
+".\output\stmf10x-demo.axf" - 0 Error(s), 1 Warning(s).
+Build Time Elapsed:  00:00:04
+</pre>
+</body>
+</html>
