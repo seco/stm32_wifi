@@ -30,6 +30,7 @@
  - [搭建简易的物联网服务端和客户端-数据库功能增加（十三）](http://www.jianshu.com/p/b88704af9ac5)
  - [搭建简易的物联网服务端和客户端-微博接口（十四）](http://www.jianshu.com/p/82591f02530a)
  - [搭建简易的物联网服务端和客户端-微博发送信息（十五）](http://www.jianshu.com/p/340110f5de8d)
+ - [搭建简易的物联网服务端和客户端-蓝牙控制（十六）](http://www.jianshu.com/p/273ecb73ac9b)
 
 
 
@@ -1302,3 +1303,112 @@ conn.query('SELECT * FROM pet',function(err,rows,fields){
 ![QQ截图20170412083821.png](http://upload-images.jianshu.io/upload_images/2245742-7fe2d0c67c063dde.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 
+
+>通过蓝牙实现对设备的控制，这样板子的USART1用来电脑串口，USART2用来wifi传输，USART3用来蓝牙控制。之所以选择蓝牙，为了防止远程有人控制设备（主要是wifi控制协议不会写。。。）
+2017.4.19
+
+## 十八、蓝牙控制
+### 1.蓝牙模块
+（1）DX-BT05模块配置
+```
+AT+NAME zzesiot //设置ble名称
+AT+BAUD 9600 //设置波特率为9600
+AT+ROLE=0 //设置为从设备
+AT+START //设备工作
+```
+
+### 2.stm32串口配置
+>USART3的的引脚为PB10-tx,PB11-rx
+
+（1）配置USART3
+```
+void Usart3_Init(unsigned int baud)
+{
+	GPIO_InitTypeDef gpioInitStruct;
+	USART_InitTypeDef usartInitStruct;
+	NVIC_InitTypeDef nvicInitStruct;
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB,ENABLE);
+	RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART3,ENABLE);
+	//PB10 TXD
+	gpioInitStruct.GPIO_Mode  = GPIO_Mode_AF_PP;
+	gpioInitStruct.GPIO_Pin = GPIO_Pin_10;
+	gpioInitStruct.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_Init(GPIOB,&gpioInitStruct);
+	//PB11 RXD
+	gpioInitStruct.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+	gpioInitStruct.GPIO_Pin = GPIO_Pin_11;
+	gpioInitStruct.GPIO_Speed = GPIO_Speed_50MHz;
+	GPIO_Init(GPIOB,&gpioInitStruct);
+	//串口参数
+	usartInitStruct.USART_BaudRate = baud;
+	usartInitStruct.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+	usartInitStruct.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
+	usartInitStruct.USART_Parity = USART_Parity_No;
+	usartInitStruct.USART_StopBits = USART_StopBits_1;
+	usartInitStruct.USART_WordLength = USART_WordLength_8b;
+	USART_Init(USART3,&usartInitStruct);
+	USART_Cmd(USART3,ENABLE);
+	USART_ITConfig(USART3,USART_IT_RXNE,ENABLE);
+	//中断
+	nvicInitStruct.NVIC_IRQChannel = USART3_IRQn;
+	nvicInitStruct.NVIC_IRQChannelCmd = ENABLE;
+	nvicInitStruct.NVIC_IRQChannelPreemptionPriority = 0;
+	nvicInitStruct.NVIC_IRQChannelSubPriority = 0;
+	NVIC_Init(&nvicInitStruct);
+}
+```
+（2）USART3中断函数
+```
+void USART3_IRQHandler(void)
+{
+	if(USART_GetITStatus(USART3, USART_IT_RXNE) != RESET)
+	{
+		if(usart3Len >= 64)	
+			usart3Len = 0;
+		usart3Buf[usart3Len++] = USART3->DR;
+		USART_ClearFlag(USART3, USART_FLAG_RXNE);
+	}
+}
+```
+
+## 3.主函数
+（1）初始化usart3，设置波特率为9600
+```
+Usart3_Init(9600);	
+```
+（2）蓝牙接受命令判断（led配置相关代码就没放上来了）
+```
+while(1){
+	if(usart3Len > 0){
+		if(strcmp(usart3Buf, "666") == 0){
+			UsartPrintf(USART3, "发送的命令为：\r\n%s\r\n", usart3Buf);
+				ledOn(LED1);//led1亮
+			}
+		else if(strcmp(usart3Buf, "233") == 0){
+			UsartPrintf(USART3, "发送的命令为：\r\n%s\r\n", usart3Buf);
+			ledOff(LED1);//led1灭
+		}
+		memset(usart3Buf, 0, sizeof(usart3Buf));
+		usart3Len = 0;
+	}
+	DelayXms(100);
+}
+```
+
+### 4.结果
+（1）手机端发送和接受蓝牙数据截图
+>使用的是在app商城下的蓝牙串口助手，自己的蓝牙串口助手正在开发。。。
+
+
+![手机端发送和接受蓝牙数据](http://upload-images.jianshu.io/upload_images/2245742-ac88a78e85e44841.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+（2）单片机现象
+
+ - 当发送666时，led1亮
+![led1亮](http://upload-images.jianshu.io/upload_images/2245742-7c8d4d2dbf2dc75d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+ - 当发送233时，led1灭
+![led1灭](http://upload-images.jianshu.io/upload_images/2245742-844c408935d1df55.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+ 
