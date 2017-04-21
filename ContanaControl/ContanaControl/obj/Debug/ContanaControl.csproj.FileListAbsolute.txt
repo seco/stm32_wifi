@@ -1,0 +1,6 @@
+D:\OneNET\http\ContanaControl\ContanaControl\bin\Debug\ContanaControl.exe.config
+D:\OneNET\http\ContanaControl\ContanaControl\bin\Debug\ContanaControl.exe
+D:\OneNET\http\ContanaControl\ContanaControl\bin\Debug\ContanaControl.pdb
+D:\OneNET\http\ContanaControl\ContanaControl\obj\Debug\ContanaControl.csprojResolveAssemblyReference.cache
+D:\OneNET\http\ContanaControl\ContanaControl\obj\Debug\ContanaControl.exe
+D:\OneNET\http\ContanaControl\ContanaControl\obj\Debug\ContanaControl.pdb
