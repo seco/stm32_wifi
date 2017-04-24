@@ -31,6 +31,8 @@
  - [搭建简易的物联网服务端和客户端-微博接口（十四）](http://www.jianshu.com/p/82591f02530a)
  - [搭建简易的物联网服务端和客户端-微博发送信息（十五）](http://www.jianshu.com/p/340110f5de8d)
  - [搭建简易的物联网服务端和客户端-蓝牙控制（十六）](http://www.jianshu.com/p/273ecb73ac9b)
+ - [搭建简易的物联网服务端和客户端-Cortana控制（十七）](http://www.jianshu.com/p/6a60c48eefe5) 
+ - [搭建简易的物联网服务端和客户端-Nodejs_PM2（十八）](http://www.jianshu.com/p/74d4a58eeb3d)
 
 
 
@@ -1412,3 +1414,216 @@ while(1){
 
 
  
+>就是用小娜打开软件，然后软件自动操作。
+感谢[kelannan](https://github.com/kelannan)
+2017.4.21
+
+ 
+
+# 十九、Cortana控制
+## 1.Cortana介绍
+微软发布的全球第一款个人智能助理
+
+## 2.控制原理
+1）通过小娜打开自己写的软件，软件通过串口发送相关命令，控制单片机。
+2）当然小娜打开软件可以通过手打和语音。
+
+## 3.Arduino程序编写
+>纯是为了方便，你也可以用stm32，stm32串口相关程序和我前面的蓝牙的串口代码是一样的。
+串口接收到“F”则开灯，接收到“T”则关灯
+
+```
+char Val;   
+int Pin1 = 13;
+void setup() {
+Serial.begin(9600);  
+    pinMode(Pin1, OUTPUT);
+ digitalWrite(Pin1, LOW);
+}
+void loop() {
+ if(Serial.available()>0){ 
+    Val=Serial.read(); //read it
+    Serial.print(Val);
+  }  
+ if (Val=='F'){
+    digitalWrite(Pin1, HIGH);//开灯
+ }
+ if(Val=='T'){
+  digitalWrite(Pin1,LOW);  //关灯
+ }
+delay(10);
+}
+```
+
+## 4.C#程序编写
+（1）在Visual Studio中新建C#命令行程序
+
+![新建C#命令行程序](http://upload-images.jianshu.io/upload_images/2245742-dbdcd8436905d72e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+（2）引入串口相关的包
+`using System.IO.Ports;`
+
+(3)主程序
+>向指定串口发送相关字符命令
+
+ - 开灯程序
+
+```
+namespace CortanaControl
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            SerialPort port = new SerialPort("COM3", 9600, Parity.None, 8, StopBits.One);
+            port.Open();
+            port.Write("F");
+            port.Close();
+        }
+    }
+}
+```
+
+ - 关灯程序 
+
+```
+namespace CortanaControl
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            SerialPort port = new SerialPort("COM3", 9600, Parity.None, 8, StopBits.One);
+            port.Open();
+            port.Write("T");
+            port.Close();
+        }
+    }
+}
+```
+
+(4)将运行生成的程序分别改名放到一起
+
+![生成的程序](http://upload-images.jianshu.io/upload_images/2245742-34ae5e3a7a49b00d.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+## 5.让Cortana能搜索到我们的程序
+>将程序的快捷方式放到开始菜单的文件夹内，当然不是那么简单的放。
+
+（1）找到文件夹
+这是我的文件夹位置
+`C:\Users\zzes\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\`
+zzes是我的用户名，其他应该都是一样的
+
+（2）到上面的位置后，可以新建一个文件夹，名称随便取，主要是把程序放里面不乱。
+比如我建的文件夹`IOT`
+
+![新建一个文件夹](http://upload-images.jianshu.io/upload_images/2245742-fe1fe08c2a935732.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+（3）进入`IOT`文件夹，在里面新建快捷方式
+
+![新建快捷方式](http://upload-images.jianshu.io/upload_images/2245742-ae911e91a1dcd933.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+（4）在对象位置的框中写入
+```
+%SystemRoot%\system32\cmd.exe /C start "" "D:\open.exe"
+```
+
+![对象位置](http://upload-images.jianshu.io/upload_images/2245742-ed2b7ad763400e47.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+（5）在快捷方式名称中写你要在Cortana中查找的名称
+比如`开灯`
+ 
+![4.png](http://upload-images.jianshu.io/upload_images/2245742-e7e2f04802b99ed9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+（6）关灯也是一样的步骤
+ 
+![5.png](http://upload-images.jianshu.io/upload_images/2245742-2131a5cc900de804.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+（7）小娜搜索测试
+ 
+![QQ截图20170420225338.png](http://upload-images.jianshu.io/upload_images/2245742-98cb08f2dd5beaae.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+## 6.结果
+http://v.youku.com/v_show/id_XMjcyMDA5MDMwNA==.html
+
+
+>在本机windows下运行Nodejs时，基本命令行黑框开着就行了。但是要把要把nodejs程序部署到自己的远程centos服务器，要用到Nodejs的PM2模块让Nodejs程序在后台运行。
+2017.4.24
+ 
+
+# 二十、Nodejs_PM2
+## 1.PM2模块
+（1）介绍
+Advanced, production process manager for Node.js
+（2）官网
+`http://pm2.keymetrics.io/`
+
+![QQ截图20170424232316.png](http://upload-images.jianshu.io/upload_images/2245742-1809de59d17943d2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+## 2.PM2使用
+（1）全局安装
+```
+npm install pm2 -g
+```
+
+（2）开启PM2
+```
+pm2 start tcpiot.js
+```
+
+![QQ截图20170424231755.png](http://upload-images.jianshu.io/upload_images/2245742-7640ec135fdeeca0.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+![QQ截图20170424231815.png](http://upload-images.jianshu.io/upload_images/2245742-c6aca01e09324624.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+（3）PM2监视器
+```
+pm2 monit
+```
+ 
+![QQ截图20170424231946.png](http://upload-images.jianshu.io/upload_images/2245742-b216f59ac08b6ea4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+（4）列出PM2后台运行的Nodejs程序
+```
+pm2 list
+```
+ 
+![list.png](http://upload-images.jianshu.io/upload_images/2245742-b56f4d0151982d53.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+（5）关闭PM2后台运行的tcpiot.js
+```
+pm2 stop tcpiot.js
+```
+ 
+![stop.png](http://upload-images.jianshu.io/upload_images/2245742-12aadd60ec408eea.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+（6）重启PM2后台关闭的tcpiot.js
+```
+pm2 restart tcpiot.js
+```
+ 
+![restart.png](http://upload-images.jianshu.io/upload_images/2245742-8dc45de9f994a065.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+（7）删除PM2后台的tcpiot.js
+```
+pm2 delete tcpiot.js
+```
+ 
+![delete.png](http://upload-images.jianshu.io/upload_images/2245742-620d7d67a2ccf189.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+## 3.结果
+可以让Nodejs程序在后台运行，不会随着命令行关闭而关闭。
