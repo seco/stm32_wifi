@@ -5,6 +5,7 @@
   "main": "mysqltest.js",
   "dependencies": {
     "echarts": "^3.4.0",
+    "emailjs": "^1.0.8",
     "express": "^4.15.2",
     "mysql": "^2.13.0"
   },
