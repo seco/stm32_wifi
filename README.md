@@ -33,6 +33,7 @@
  - [搭建简易的物联网服务端和客户端-蓝牙控制（十六）](http://www.jianshu.com/p/273ecb73ac9b)
  - [搭建简易的物联网服务端和客户端-Cortana控制（十七）](http://www.jianshu.com/p/6a60c48eefe5) 
  - [搭建简易的物联网服务端和客户端-Nodejs_PM2（十八）](http://www.jianshu.com/p/74d4a58eeb3d)
+ - [搭建简易的物联网服务端和客户端-邮件通知（十九）](http://www.jianshu.com/p/2a17b2bd57cb)
 
 
 
@@ -1627,3 +1628,84 @@ pm2 delete tcpiot.js
 
 ## 3.结果
 可以让Nodejs程序在后台运行，不会随着命令行关闭而关闭。
+
+>实现对于一些指定数据超过预期的时候，会发送邮件报警
+2017.4.29
+
+# 二十一邮件通知
+## 1.nodejs邮件模块
+（1）emailjs模块
+send emails, html and attachments (files, streams and strings) from node.js to any smtp server
+（2）github网址
+https://github.com/eleith/emailjs
+（3）安装
+```
+npm install emailjs --save
+```
+
+## 2.邮件发送
+>定时使用前面说过的node-schedule模块
+
+（1）引入相关模块
+```
+var email = require("emailjs");//发送邮件模块
+var mysql = require('mysql');//mysql模块
+var schedule = require('node-schedule');//定时模块
+```
+
+（2）配置数据库
+```
+//数据库配置
+var conn = mysql.createConnection({
+    host:'localhost',
+    user:'root',
+    password:'root',
+    database:'nodemysql',
+    port:3306
+})
+//连接数据库
+conn.connect();
+```
+
+（3）发送邮箱的配置
+```
+//配置邮箱
+var server = email.server.connect({
+    user: "xxx@xxx.com",//邮箱用户名
+    password:"xxxxxx",//密码
+    host:"smtp服务器的地址",//查看使用的邮箱的smtp服务器地址
+    ssl:true
+});
+```
+
+（4）定时发送
+```
+//每分钟第十秒的时候检测
+var rule = new schedule.RecurrenceRule();
+rule.second = 10;//定义为每分钟第十秒
+var j = schedule.scheduleJob(rule,function(){
+    //数据库查询
+    conn.query('SELECT * FROM pet',function(err,rows,fields){
+        //例如获取温度的值，存入tem
+        var tem = rows[rows.length-1].tem;
+        //定义邮件内容
+        var temmsg = {
+            text:"tempreture is " + tem + ",please  be careful",//邮件内容
+            from: "15755022403@139.com",//发送方
+            to:"605747907@qq.com",//接收方
+            subject:"PetHose tem"
+        };
+        //判断如果温度大于或等于30度，就发送邮件通知
+        if(tem>=30){
+            //邮件发送
+            server.send(temmsg,function(err,message){
+                console.log(err || "ok");
+            });
+        }
+    });
+});
+```
+
+## 3.结果
+（1）当温度大于或等于三十度的时候，发送邮件
+![接收到的报警邮件](http://upload-images.jianshu.io/upload_images/2245742-3b142f7796683f03.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
