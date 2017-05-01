@@ -1632,7 +1632,7 @@ pm2 delete tcpiot.js
 >实现对于一些指定数据超过预期的时候，会发送邮件报警
 2017.4.29
 
-# 二十一邮件通知
+# 二十一、邮件通知
 ## 1.nodejs邮件模块
 （1）emailjs模块
 send emails, html and attachments (files, streams and strings) from node.js to any smtp server
@@ -1709,3 +1709,135 @@ var j = schedule.scheduleJob(rule,function(){
 ## 3.结果
 （1）当温度大于或等于三十度的时候，发送邮件
 ![接收到的报警邮件](http://upload-images.jianshu.io/upload_images/2245742-3b142f7796683f03.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+
+>网络控制，就是通过前端页面点击控制按钮，然后通过ajax来出发后端函数将命令存入数据库，然后后端TCP服务端将命令从数据库取出，发送给单片机。当然只是简单的一个命令实现。
+2017.5.1
+
+ 
+
+# 二十二、网络控制
+## 1.建立一个存储命令的表
+（1）比如staus表
+
+![数据库.jpg](http://upload-images.jianshu.io/upload_images/2245742-77ff580a7ed983d9.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+## 2.编写express接口
+>提供给前端按钮通过AJAX触发
+
+（1）当触发/buttonclick1,则将命令1存入数据库；
+当触发/buttonclick0,则将命令0存入数据库。
+```
+//按钮api
+app.get('/buttonclick1',function(req,res){
+    //增加
+    var post = {status:1};
+    conn.query('INSERT INTO status SET ?', post ,function(error,result,fields){
+        if(error) throw error;
+    });
+    res.send("1");
+    res.end();// 如果不执行end(), 那么前端网页则会一直等待response
+})
+app.get('/buttonclick0',function(req,res){
+    //增加
+    var post = {status:0};
+    conn.query('INSERT INTO status SET ?', post ,function(error,result,fields){
+        if(error) throw error;
+    });
+    res.send("0");
+    res.end();// 如果不执行end(), 那么前端网页则会一直等待response
+})
+```
+
+## 3.编写前端按钮
+（1）HTML
+>就两个button，一个开，一个关
+
+```
+<button onclick="buttonclk1()">开启</button> 
+<button onclick="buttonclk0()">关闭</button> 
+```
+
+（2）javascript
+>ajax触发，使用fetch
+
+```
+function status(response){
+     if(response.status>=200 && response.status<300){
+        return Promise.resolve(response);
+     }else{
+        return Promise.reject(new Error(response.statusText));
+     }
+}
+function json(response){
+    return response.json();
+}
+//开启按钮触发函数
+function buttonclk1(){
+    fetch("http://127.0.0.1:3000/buttonclick1")//后端提供的buttonclick1接口
+        .then(status)
+        .then(json)
+        .then(function(data){
+           console.log("请求成功，JSON解析后的响应数据为:",data);
+        })
+        .catch(function(err){
+            console.log("Fetch错误:"+err);
+    });
+}   
+//关闭按钮触发函数
+function buttonclk0(){
+    fetch("http://127.0.0.1:3000/buttonclick0")///后端提供的buttonclick0接口
+        .then(status)
+        .then(json)
+        .then(function(data){               console.log("请求成功，JSON解析后的响应数据为:",data);
+    })
+    .catch(function(err){
+        console.log("Fetch错误:"+err);
+    });
+}
+```
+
+（3）点击触发结果
+
+![前端.jpg](http://upload-images.jianshu.io/upload_images/2245742-aa058fc24737360a.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+## 4.TCP服务端
+>在和单片机建立通信后，就会一直从数据库获取最新的命令，然后发送给单片机。
+
+（1）代码
+>将其写入socket.on内
+
+```
+conn.query('SELECT * FROM status',function(err,rows,fields){
+    if (err) throw err;
+    socket.write(rows[rows.length-1].status+"");//必须要字符串才能发，用toString()报错，有人知道为啥吗？
+})          
+```
+
+## 5.STM32代码
+>当然还是基于onenet的代码，感谢中移物联，代码写的很易读！具体只放处理数据的代码。
+
+（1）处理数据,控制LED的开关
+```
+void Net_Event(unsigned char *dataPtr){
+    if(strstr((char *)dataPtr, "1"))
+    {
+        UsartPrintf(USART_DEBUG, "¿ª\r\n");
+        Led4_Set(LED_ON);
+    }
+    else if(strstr((char *)dataPtr,"0")){
+        UsartPrintf(USART_DEBUG,"¹Ø\r\n");
+        Led4_Set(LED_OFF);
+    }
+}
+```
+
+## 6.串口截图
+
+![串口显示.jpg](http://upload-images.jianshu.io/upload_images/2245742-897c1594de411f2a.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+ 
