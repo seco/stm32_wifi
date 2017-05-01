@@ -370,29 +370,38 @@ void OneNet_Status(void)
 */
 void OneNet_Event(unsigned char *dataPtr)
 {
+		if(strstr((char *)dataPtr, "1"))
+		{
+			UsartPrintf(USART_DEBUG, "开\r\n");
+			Led4_Set(LED_ON);
+		}
+		else if(strstr((char *)dataPtr,"0")){
+			UsartPrintf(USART_DEBUG,"关\r\n");
+			Led4_Set(LED_OFF);
+		}
 
-	if(strstr((char *)dataPtr, "CLOSED"))
-	{
-		UsartPrintf(USART_DEBUG, "TCP CLOSED1\r\n");
-		
-		faultTypeReport = faultType = FAULT_EDP;						//标记为协议错误
-		
-		oneNetInfo.errCount++;
-	}
-	else
-	{
-		//这里用来检测是否发送成功
-		if(strstr((char *)dataPtr, "succ"))
-		{
-			UsartPrintf(USART_DEBUG, "Tips:		Send OK\r\n");
-			oneNetInfo.errCount = 0;
-		}
-		else
-		{
-			UsartPrintf(USART_DEBUG, "Tips:		Send Err\r\n");
-			oneNetInfo.errCount++;
-		}
-	}
+//	if(strstr((char *)dataPtr, "CLOSED"))
+//	{
+//		UsartPrintf(USART_DEBUG, "TCP CLOSED1\r\n");
+//		
+//		faultTypeReport = faultType = FAULT_EDP;						//标记为协议错误
+//		
+//		oneNetInfo.errCount++;
+//	}
+//	else
+//	{
+//		//这里用来检测是否发送成功
+//		if(strstr((char *)dataPtr, "succ"))
+//		{
+//			UsartPrintf(USART_DEBUG, "Tips:		Send OK\r\n");
+//			oneNetInfo.errCount = 0;
+//		}
+//		else
+//		{
+//			UsartPrintf(USART_DEBUG, "Tips:		Send Err\r\n");
+//			oneNetInfo.errCount++;
+//		}
+//	}
 	
 	NET_DEVICE_ClrData();
 
