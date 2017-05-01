@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>button test</title>
+</head>
+<body>
+<button onclick="buttonclk1()">开启</button>
+<button onclick="buttonclk0()">关闭</button>
+<script>
+	function status(response){
+	    if(response.status>=200 && response.status<300){
+	        return Promise.resolve(response);
+	    }
+	    else{
+	        return Promise.reject(new Error(response.statusText));
+	    }
+	}
+	function json(response){
+	    return response.json();
+	}
+	function buttonclk1(){
+		fetch("http://127.0.0.1:3000/buttonclick1")
+			.then(status)
+			.then(json)
+			.then(function(data){
+			    console.log("请求成功，JSON解析后的响应数据为:",data);
+			})
+			.catch(function(err){
+			    console.log("Fetch错误:"+err);
+		});
+	}	
+	function buttonclk0(){
+		fetch("http://127.0.0.1:3000/buttonclick0")
+			.then(status)
+			.then(json)
+			.then(function(data){
+			    console.log("请求成功，JSON解析后的响应数据为:",data);
+			})
+			.catch(function(err){
+			    console.log("Fetch错误:"+err);
+		});
+	}
+	
+</script>
+</body>
+</html>
