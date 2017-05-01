@@ -13,7 +13,10 @@ conn.connect();
 net.createServer(function(socket){
 	socket.on('data',function(data){
 		console.log('got:',data.toString());
-
+		conn.query('SELECT * FROM status',function(err,rows,fields){
+			if (err) throw err;
+			socket.write(rows[rows.length-1].status+"");
+		})	
 		var text = JSON.parse(data.toString());
 		var arr = {};
 		arr.tem = text.tem;
