@@ -11,9 +11,9 @@ namespace ContanaControl
     {
         static void Main(string[] args)
         {
-            SerialPort port = new SerialPort("COM3", 9600, Parity.None, 8, StopBits.One);
+            SerialPort port = new SerialPort("COM4", 115200, Parity.None, 8, StopBits.One);
             port.Open();
-            port.Write("F");
+            port.Write("close");
             port.Close();
         }
     }
